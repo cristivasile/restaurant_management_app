@@ -7,9 +7,9 @@ import 'package:restaurant_management_app/bin/constants.dart' as constants;
 class MovableTable extends StatefulWidget {
   final BoxConstraints constraints; //widget constraints received as parameter
   final String imagePath; //the corresponding table's image path
-  final int imageWidth;
-  final int imageHeight;
-  final Offset position;
+  final int imageWidth; // width of the displayed image
+  final int imageHeight; // height of the displayed image
+  final Offset position; // position relative to the top left corner of the container
   MovableTable(
       {Key? key,
       required this.constraints,
@@ -39,15 +39,18 @@ class _MovableTableState extends State<MovableTable> {
       left: _position.dx,
       top: _position.dy,
       child: Draggable(
-        feedback: Image(
+         // image displayed under the mouse while dragging
+        feedback: Image(   
             image: AssetImage(widget.imagePath + ".png"),
             width: widget.imageWidth.toDouble(),
             height: widget.imageHeight.toDouble()),
-        child: Image(
+        // image displayed normally
+        child: Image(      
             image: AssetImage(widget.imagePath + ".png"),
             width: widget.imageWidth.toDouble(),
             height: widget.imageHeight.toDouble()),
-        childWhenDragging: Image(
+        //image displayed at the table position while moving it
+        childWhenDragging: Image( 
             image:
                 AssetImage(widget.imagePath + constants.feedbackPath + ".png"),
             width: widget.imageWidth.toDouble(),

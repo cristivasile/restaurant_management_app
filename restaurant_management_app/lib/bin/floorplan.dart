@@ -27,45 +27,50 @@ class _FloorPlanState extends State<FloorPlan> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                // ignore: avoid_unnecessary_containers
                 Container(
-                  child: Row(children: [
+                  // container is necessary bc. it groups the selector and button together
+                  child: Row(
+                    children: [
                       //table size selector
-                    Container(
-                      margin: new EdgeInsets.symmetric(horizontal: 10),
-                      child: DropdownButton<String>(
-                        value: dropdownValue,
-                        icon: const Icon(Icons.arrow_downward),
-                        elevation: 16,
-                        style: const TextStyle(color: Colors.black),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.green,
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: DropdownButton<String>(
+                          value: dropdownValue,
+                          icon: const Icon(Icons.arrow_downward),
+                          elevation: 16,
+                          style: const TextStyle(color: Colors.black),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.green,
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                          items: <String>['2', '3', '4', '6', '8']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                         ),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
-                        items: <String>['2', '3', '4', '6', '8']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
                       ),
-                    ),
-                    //add table button
-                    FloatingActionButton(
-                      onPressed: () => {addTable()},
-                      child: const Icon(Icons.add),
-                      backgroundColor: Colors.lightGreen,
-                    )
-                  ],)
-                ,)
+                      //add table button
+                      FloatingActionButton(
+                        onPressed: () => {addTable()},
+                        child: const Icon(Icons.add),
+                        backgroundColor: Colors.lightGreen,
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
           ),
+          // Container for the displayed tables
           SizedBox(
             width: constraints.maxWidth,
             height: constraints.maxHeight * 7 / 8,
