@@ -9,14 +9,11 @@ class FloorPlan extends StatefulWidget {
   State<FloorPlan> createState() => _FloorPlanState();
 }
 
+bool firstBuild = true;
+
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
   List<MovableTable> _tables = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +27,7 @@ class _FloorPlanState extends State<FloorPlan> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
-                  onPressed: () => {
-                    setState(() {
-                      addTable();
-                    })
-                  },
+                  onPressed: () => {addTable()},
                   child: const Icon(Icons.add),
                   backgroundColor: Colors.lightGreen,
                 )
@@ -46,7 +39,12 @@ class _FloorPlanState extends State<FloorPlan> {
             height: constraints.maxHeight * 7 / 8,
             child: LayoutBuilder(builder: (context, childConstraints) {
               _tablesBoxConstraints = childConstraints;
-              _tables = loadTables();
+
+              if (firstBuild) { // load tables from somewhere on first build
+                firstBuild = false;
+                _tables = loadTables();
+              }
+
               return Stack(
                 children: _tables,
               );
@@ -64,7 +62,6 @@ class _FloorPlanState extends State<FloorPlan> {
           constraints: _tablesBoxConstraints,
           tableSize: 2,
           position: Offset.zero));
-      build(context);
     });
   }
 
