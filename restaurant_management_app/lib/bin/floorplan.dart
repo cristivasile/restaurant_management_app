@@ -13,6 +13,7 @@ bool firstBuild = true;
 
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
+  String dropdownValue = '2';
   List<MovableTable> _tables = [];
 
   @override
@@ -26,11 +27,42 @@ class _FloorPlanState extends State<FloorPlan> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                FloatingActionButton(
-                  onPressed: () => {addTable()},
-                  child: const Icon(Icons.add),
-                  backgroundColor: Colors.lightGreen,
-                )
+                Container(
+                  child: Row(children: [
+                      //table size selector
+                    Container(
+                      margin: new EdgeInsets.symmetric(horizontal: 10),
+                      child: DropdownButton<String>(
+                        value: dropdownValue,
+                        icon: const Icon(Icons.arrow_downward),
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.black),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.green,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        },
+                        items: <String>['2', '3', '4', '6', '8']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    //add table button
+                    FloatingActionButton(
+                      onPressed: () => {addTable()},
+                      child: const Icon(Icons.add),
+                      backgroundColor: Colors.lightGreen,
+                    )
+                  ],)
+                ,)
               ],
             ),
           ),
@@ -59,11 +91,10 @@ class _FloorPlanState extends State<FloorPlan> {
   /// Adds a new table widget to the table list
   ///
   void addTable() {
-    //TODO - Add size picker
     setState(() {
       _tables.add(MovableTable(
           constraints: _tablesBoxConstraints,
-          tableSize: 2,
+          tableSize: int.parse(dropdownValue),
           position: Offset.zero));
     });
   }
