@@ -37,11 +37,28 @@ class _FloorPlanState extends State<FloorPlan> {
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
         children: <Widget>[
-          MovableTable(constraints: constraints),
-          MovableTable(constraints: constraints),
+          MovableTable(
+            constraints: constraints,
+            tableSize: 3,
+          ),
+          MovableTable(
+            constraints: constraints,
+            tableSize: 2,
+          ),
+          MovableTable(
+            constraints: constraints,
+            tableSize: 4,
+          ),
+          MovableTable(
+            constraints: constraints,
+            tableSize: 6,
+          ),
+          MovableTable(
+            constraints: constraints,
+            tableSize: 8,
+          ),
         ],
       );
     });
   }
 }
-
