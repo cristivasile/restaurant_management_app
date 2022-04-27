@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_management_app/bin/table.dart';
+import 'package:restaurant_management_app/bin/floorplan.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,44 +21,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class FloorPlan extends StatefulWidget {
-  const FloorPlan({Key? key}) : super(key: key);
-
-  @override
-  State<FloorPlan> createState() => _FloorPlanState();
-}
-
-class _FloorPlanState extends State<FloorPlan> {
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Stack(
-        children: <Widget>[
-          MovableTable(
-            constraints: constraints,
-            tableSize: 3,
-          ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 2,
-          ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 4,
-          ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 6,
-          ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 8,
-          ),
-        ],
-      );
-    });
   }
 }

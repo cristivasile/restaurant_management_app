@@ -9,8 +9,12 @@ class MovableTable extends StatefulWidget {
   final String imagePath; //the corresponding table's image path
   final int imageWidth;
   final int imageHeight;
-
-  MovableTable({Key? key, required this.constraints, required tableSize})
+  final Offset offset;
+  MovableTable(
+      {Key? key,
+      required this.constraints,
+      required tableSize,
+      required this.offset})
       : imagePath = getImagePath(tableSize),
         imageWidth = getImageSize(tableSize)[0],
         imageHeight = getImageSize(tableSize)[1],
@@ -21,7 +25,13 @@ class MovableTable extends StatefulWidget {
 }
 
 class _MovableTableState extends State<MovableTable> {
-  Offset _offset = Offset.zero;
+  late Offset _offset;
+
+  @override
+  void initState() {
+    super.initState();
+    _offset = widget.offset;
+  }
 
   @override
   Widget build(BuildContext context) {
