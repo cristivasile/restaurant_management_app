@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/table.dart';
 
+/// Floor plan builder
 class FloorPlan extends StatefulWidget {
   const FloorPlan({Key? key}) : super(key: key);
 
@@ -9,38 +10,92 @@ class FloorPlan extends StatefulWidget {
 }
 
 class _FloorPlanState extends State<FloorPlan> {
+  late BoxConstraints _tablesBoxConstraints;
+  List<MovableTable> _tables = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Stack(
-        children: <Widget>[
-          MovableTable(
-            constraints: constraints,
-            tableSize: 3,
-            offset: Offset.zero,
+      return Column(
+        children: [
+          SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight * 1 / 8,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FloatingActionButton(
+                  onPressed: () => {
+                    setState(() {
+                      addTable();
+                    })
+                  },
+                  child: const Icon(Icons.add),
+                  backgroundColor: Colors.lightGreen,
+                )
+              ],
+            ),
           ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 2,
-            offset: Offset.zero,
-          ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 4,
-            offset: Offset.zero,
-          ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 6,
-            offset: Offset.zero,
-          ),
-          MovableTable(
-            constraints: constraints,
-            tableSize: 8,
-            offset: Offset.zero,
+          SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight * 7 / 8,
+            child: LayoutBuilder(builder: (context, childConstraints) {
+              _tablesBoxConstraints = childConstraints;
+              _tables = loadTables();
+              return Stack(
+                children: _tables,
+              );
+            }),
           ),
         ],
       );
     });
+  }
+
+  void addTable() {
+    //TODO - Add size picker
+    setState(() {
+      _tables.add(MovableTable(
+          constraints: _tablesBoxConstraints,
+          tableSize: 2,
+          position: Offset.zero));
+      build(context);
+    });
+  }
+
+  List<MovableTable> loadTables() {
+    //TODO - Load from somewhere
+    List<MovableTable> result = [];
+    result.add(MovableTable(
+      constraints: _tablesBoxConstraints,
+      tableSize: 2,
+      position: Offset.zero,
+    ));
+    result.add(MovableTable(
+      constraints: _tablesBoxConstraints,
+      tableSize: 3,
+      position: Offset.zero,
+    ));
+    result.add(MovableTable(
+      constraints: _tablesBoxConstraints,
+      tableSize: 4,
+      position: Offset.zero,
+    ));
+    result.add(MovableTable(
+      constraints: _tablesBoxConstraints,
+      tableSize: 6,
+      position: Offset.zero,
+    ));
+    result.add(MovableTable(
+      constraints: _tablesBoxConstraints,
+      tableSize: 8,
+      position: Offset.zero,
+    ));
+    return result;
   }
 }

@@ -9,12 +9,12 @@ class MovableTable extends StatefulWidget {
   final String imagePath; //the corresponding table's image path
   final int imageWidth;
   final int imageHeight;
-  final Offset offset;
+  final Offset position;
   MovableTable(
       {Key? key,
       required this.constraints,
       required tableSize,
-      required this.offset})
+      required this.position})
       : imagePath = getImagePath(tableSize),
         imageWidth = getImageSize(tableSize)[0],
         imageHeight = getImageSize(tableSize)[1],
@@ -25,19 +25,19 @@ class MovableTable extends StatefulWidget {
 }
 
 class _MovableTableState extends State<MovableTable> {
-  late Offset _offset;
+  late Offset _position;
 
   @override
   void initState() {
     super.initState();
-    _offset = widget.offset;
+    _position = widget.position;
   }
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: _offset.dx,
-      top: _offset.dy,
+      left: _position.dx,
+      top: _position.dy,
       child: Draggable(
         feedback: Image(
             image: AssetImage(widget.imagePath + ".png"),
@@ -58,7 +58,8 @@ class _MovableTableState extends State<MovableTable> {
                 widget.constraints.maxHeight;
             // details.offset is relative to the window instead of the container
             // => without this the item would be placed too low because of the app bar
-            _offset = Offset(details.offset.dx, details.offset.dy - adjustment);
+            _position = Offset(details.offset.dx,
+                details.offset.dy - adjustment);
           });
         },
       ),
@@ -83,7 +84,8 @@ String getImagePath(int tableSize) {
     case 8:
       return constants.eightTablePath;
   }
-  return "";
+
+  throw Exception("Invalid table size!");
 }
 
 /// Receives a table size and returns a list containing the required dimensions
@@ -113,5 +115,5 @@ List<int> getImageSize(int tableSize) {
       return largeTable;
   }
 
-  return [];
+  throw Exception("Invalid table size!");
 }
