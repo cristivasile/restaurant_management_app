@@ -40,7 +40,8 @@ class _FloorPlanState extends State<FloorPlan> {
             child: LayoutBuilder(builder: (context, childConstraints) {
               _tablesBoxConstraints = childConstraints;
 
-              if (firstBuild) { // load tables from somewhere on first build
+              if (firstBuild) {
+                // load tables from somewhere on first build
                 firstBuild = false;
                 _tables = loadTables();
               }
@@ -55,6 +56,8 @@ class _FloorPlanState extends State<FloorPlan> {
     });
   }
 
+  /// Adds a new table widget to the table list
+  ///
   void addTable() {
     //TODO - Add size picker
     setState(() {
@@ -65,33 +68,36 @@ class _FloorPlanState extends State<FloorPlan> {
     });
   }
 
+  /// Loads data and generates table widgets to load into the table list
+  ///
   List<MovableTable> loadTables() {
     //TODO - Load from somewhere
     List<MovableTable> result = [];
+
     result.add(MovableTable(
       constraints: _tablesBoxConstraints,
       tableSize: 2,
-      position: Offset.zero,
+      position: const Offset(850, 50),
     ));
     result.add(MovableTable(
       constraints: _tablesBoxConstraints,
       tableSize: 3,
-      position: Offset.zero,
+      position: const Offset(550, 150),
     ));
     result.add(MovableTable(
       constraints: _tablesBoxConstraints,
       tableSize: 4,
-      position: Offset.zero,
+      position: const Offset(25, 425),
     ));
     result.add(MovableTable(
       constraints: _tablesBoxConstraints,
       tableSize: 6,
-      position: Offset.zero,
+      position: const Offset(690, 300),
     ));
     result.add(MovableTable(
       constraints: _tablesBoxConstraints,
       tableSize: 8,
-      position: Offset.zero,
+      position: const Offset(260, 420),
     ));
     return result;
   }

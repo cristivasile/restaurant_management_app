@@ -58,8 +58,14 @@ class _MovableTableState extends State<MovableTable> {
                 widget.constraints.maxHeight;
             // details.offset is relative to the window instead of the container
             // => without this the item would be placed too low because of the app bar
-            _position = Offset(details.offset.dx,
+
+            //check if the position is inside the container
+            if (details.offset.dx + widget.imageWidth < MediaQuery.of(context).size.width &&
+            details.offset.dx > 0 && details.offset.dy > 0 + adjustment &&
+            details.offset.dy + widget.imageHeight < MediaQuery.of(context).size.height) {
+              _position = Offset(details.offset.dx,
                 details.offset.dy - adjustment);
+            }
           });
         },
       ),
