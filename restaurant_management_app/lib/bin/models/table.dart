@@ -9,4 +9,3 @@ class Table {
       required this.yOffset,
       required this.tableSize});
 }
-
