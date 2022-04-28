@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_management_app/bin/widgets/table.dart';
+import 'package:restaurant_management_app/bin/entities/tableList.dart';
+import 'package:restaurant_management_app/bin/services/tableService.dart';
+import 'package:restaurant_management_app/bin/widgets/tableWidget.dart';
 
 /// Floor plan builder
 class FloorPlan extends StatefulWidget {
@@ -63,7 +65,7 @@ class _FloorPlanState extends State<FloorPlan> {
                         onPressed: () => {addTable()},
                         child: const Icon(Icons.add),
                         backgroundColor: Colors.lightGreen,
-                      )
+                      ),
                     ],
                   ),
                 )
@@ -80,7 +82,8 @@ class _FloorPlanState extends State<FloorPlan> {
               if (firstBuild) {
                 // load tables from somewhere on first build
                 firstBuild = false;
-                _tables = loadTables();
+                _tables = getWidgetsFromTables(
+                    TableList.getTableList().tables, childConstraints);
               }
 
               return Stack(
@@ -100,41 +103,9 @@ class _FloorPlanState extends State<FloorPlan> {
       _tables.add(MovableTable(
           constraints: _tablesBoxConstraints,
           tableSize: int.parse(dropdownValue),
-          position: Offset.zero));
+          position: Offset.zero,
+          id: "A${_tables.length}"));
+      //TODO - generate or read ID
     });
-  }
-
-  /// Loads data and generates table widgets to load into the table list
-  ///
-  List<MovableTable> loadTables() {
-    //TODO - Load from somewhere
-    List<MovableTable> result = [];
-
-    result.add(MovableTable(
-      constraints: _tablesBoxConstraints,
-      tableSize: 2,
-      position: const Offset(850, 50),
-    ));
-    result.add(MovableTable(
-      constraints: _tablesBoxConstraints,
-      tableSize: 3,
-      position: const Offset(550, 150),
-    ));
-    result.add(MovableTable(
-      constraints: _tablesBoxConstraints,
-      tableSize: 4,
-      position: const Offset(25, 425),
-    ));
-    result.add(MovableTable(
-      constraints: _tablesBoxConstraints,
-      tableSize: 6,
-      position: const Offset(690, 300),
-    ));
-    result.add(MovableTable(
-      constraints: _tablesBoxConstraints,
-      tableSize: 8,
-      position: const Offset(260, 420),
-    ));
-    return result;
   }
 }
