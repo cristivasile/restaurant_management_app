@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart' as constants;
 
@@ -7,16 +8,20 @@ import 'package:restaurant_management_app/bin/constants.dart' as constants;
 class MovableTable extends StatefulWidget {
   final BoxConstraints constraints; //widget constraints received as parameter
   final String imagePath; //the corresponding table's image path
-  final int imageWidth; // width of the displayed image
+  final int _imageWidth; // width of the displayed image
   final int imageHeight; // height of the displayed image
-  final Offset position; // position relative to the top left corner of the container
-  MovableTable(
-      {Key? key,
-      required this.constraints,
-      required tableSize,
-      required this.position})
-      : imagePath = getImagePath(tableSize),
-        imageWidth = getImageSize(tableSize)[0],
+  final int tableSize;
+  late final String id;
+  final Offset
+      position; // position relative to the top left corner of the container
+  MovableTable({
+    Key? key,
+    required this.constraints,
+    required this.tableSize,
+    required this.position,
+    required this.id,
+  })  : imagePath = getImagePath(tableSize),
+        _imageWidth = getImageSize(tableSize)[0],
         imageHeight = getImageSize(tableSize)[1],
         super(key: key);
 
@@ -39,21 +44,32 @@ class _MovableTableState extends State<MovableTable> {
       left: _position.dx,
       top: _position.dy,
       child: Draggable(
-         // image displayed under the mouse while dragging
-        feedback: Image(   
+        // image displayed under the mouse while dragging
+        feedback: Image(
             image: AssetImage(widget.imagePath + ".png"),
-            width: widget.imageWidth.toDouble(),
+            width: widget._imageWidth.toDouble(),
             height: widget.imageHeight.toDouble()),
         // image displayed normally
-        child: Image(      
-            image: AssetImage(widget.imagePath + ".png"),
-            width: widget.imageWidth.toDouble(),
-            height: widget.imageHeight.toDouble()),
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Image(
+              image: AssetImage(widget.imagePath + ".png"),
+              width: widget._imageWidth.toDouble(),
+              height: widget.imageHeight.toDouble(),
+            ),
+            Text(
+              widget.id,
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
         //image displayed at the table position while moving it
-        childWhenDragging: Image( 
+        childWhenDragging: Image(
             image:
                 AssetImage(widget.imagePath + constants.feedbackPath + ".png"),
-            width: widget.imageWidth.toDouble(),
+            width: widget._imageWidth.toDouble(),
             height: widget.imageHeight.toDouble()),
         onDragEnd: (DraggableDetails details) {
           setState(() {
@@ -63,11 +79,14 @@ class _MovableTableState extends State<MovableTable> {
             // => without this the item would be placed too low because of the app bar
 
             //check if the position is inside the container
-            if (details.offset.dx + widget.imageWidth < MediaQuery.of(context).size.width &&
-            details.offset.dx > 0 && details.offset.dy > 0 + adjustment &&
-            details.offset.dy + widget.imageHeight < MediaQuery.of(context).size.height) {
-              _position = Offset(details.offset.dx,
-                details.offset.dy - adjustment);
+            if (details.offset.dx + widget._imageWidth <
+                    MediaQuery.of(context).size.width &&
+                details.offset.dx > 0 &&
+                details.offset.dy > 0 + adjustment &&
+                details.offset.dy + widget.imageHeight <
+                    MediaQuery.of(context).size.height) {
+              _position =
+                  Offset(details.offset.dx, details.offset.dy - adjustment);
             }
           });
         },
