@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_management_app/bin/table.dart';
+import 'package:restaurant_management_app/bin/widgets/table.dart';
 
 /// Floor plan builder
 class FloorPlan extends StatefulWidget {

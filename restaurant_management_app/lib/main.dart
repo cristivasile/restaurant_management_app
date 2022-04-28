@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_management_app/bin/floorplan.dart';
+import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
 
 void main() {
   runApp(const MyApp());
