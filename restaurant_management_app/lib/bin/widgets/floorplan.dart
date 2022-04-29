@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_management_app/bin/entities/tableList.dart';
-import 'package:restaurant_management_app/bin/services/tableService.dart';
-import 'package:restaurant_management_app/bin/widgets/tableWidget.dart';
+import 'package:restaurant_management_app/bin/entities/table_list.dart';
+import 'package:restaurant_management_app/bin/models/table_model.dart';
+import 'package:restaurant_management_app/bin/services/table_service.dart';
+import 'package:restaurant_management_app/bin/widgets/table_widget.dart';
 
 /// Floor plan builder
 class FloorPlan extends StatefulWidget {
@@ -17,6 +18,22 @@ class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
   String dropdownValue = '2';
   List<MovableTable> _tables = [];
+  List<TableModel> _tableModelList = []; //required for the first initialization of _tables
+  bool read = false;
+
+  @override
+  void initState(){
+    super.initState();
+    init();
+  }
+
+  //separate function because it needs to be async
+  Future<void> init() async{
+    _tableModelList = await loadTables();
+    setState(() {
+      read = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,11 +96,11 @@ class _FloorPlanState extends State<FloorPlan> {
             child: LayoutBuilder(builder: (context, childConstraints) {
               _tablesBoxConstraints = childConstraints;
 
-              if (firstBuild) {
+              if (read && firstBuild) {
                 // load tables from somewhere on first build
                 firstBuild = false;
                 _tables = getWidgetsFromTables(
-                    TableList.getTableList(), childConstraints);
+                    _tableModelList, childConstraints);
               }
 
               return Stack(
@@ -108,5 +125,8 @@ class _FloorPlanState extends State<FloorPlan> {
       ));
     });
     TableList.setTableList(getTablesFromTableWidgets(_tables)); //update static TableList
+    //TODO - decide if updates are inserted instantly
+    //if not, this line needs to be removed
+    saveTables(_tables);
   }
 }

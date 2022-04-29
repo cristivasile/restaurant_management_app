@@ -1,17 +1,18 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import '../models/table.dart' as table_model;
-import '../widgets/tableWidget.dart';
+import 'package:restaurant_management_app/main.dart';
+import '../models/table_model.dart' as table_model;
+import '../widgets/table_widget.dart';
 
 /// Returns a list of MovableTable from a list of tables
 ///
 /// @param tables: a list of tables
 /// @param constraints: a MovableTable needs the BoxConstraints from where it is created
 List<MovableTable> getWidgetsFromTables(
-    List<table_model.Table> tables, BoxConstraints constraints) {
+    List<table_model.TableModel> tables, BoxConstraints constraints) {
   List<MovableTable> result = [];
 
-  for (table_model.Table table in tables) {
+  for (table_model.TableModel table in tables) {
     result.add(MovableTable(
       constraints: constraints,
       tableSize: table.tableSize,
@@ -26,12 +27,12 @@ List<MovableTable> getWidgetsFromTables(
 /// Returns a list of Table from a list of MovableTable widgets
 ///
 ///@param tableWidgets: list of widgets
-List<table_model.Table> getTablesFromTableWidgets(
+List<table_model.TableModel> getTablesFromTableWidgets(
     List<MovableTable> tableWidgets) {
-  List<table_model.Table> tables = [];
+  List<table_model.TableModel> tables = [];
 
   for (MovableTable widget in tableWidgets) {
-    tables.add(table_model.Table(
+    tables.add(table_model.TableModel(
         id: widget.id,
         xOffset: widget.position.dx,
         yOffset: widget.position.dy,
@@ -43,22 +44,8 @@ List<table_model.Table> getTablesFromTableWidgets(
 
 /// Loads a list of tables and returns it
 ///
-List<table_model.Table> loadTables() {
-//TODO - load from disk or db
-  List<table_model.Table> result = [];
-
-  //TODO - delete placeholder table list
-  result.add(
-      table_model.Table(tableSize: 2, xOffset: 850, yOffset: 50, id: "A1"));
-  result.add(
-      table_model.Table(tableSize: 3, xOffset: 550, yOffset: 150, id: "B1"));
-  result.add(
-      table_model.Table(tableSize: 4, xOffset: 25, yOffset: 150, id: "C1"));
-  result.add(
-      table_model.Table(tableSize: 6, xOffset: 690, yOffset: 300, id: "D1"));
-  result.add(
-      table_model.Table(tableSize: 8, xOffset: 260, yOffset: 420, id: "E1"));
-
+Future<List<table_model.TableModel>> loadTables() async {
+  List<table_model.TableModel> result = await data.readTables();
   return result;
 }
 
@@ -66,16 +53,15 @@ List<table_model.Table> loadTables() {
 ///
 ///@param tables: MovableTable widgets
 void saveTables(List<MovableTable> tables) {
-  List<table_model.Table> toSave = getTablesFromTableWidgets(tables);
-  //TODO - save somewhere
+  List<table_model.TableModel> toSave = getTablesFromTableWidgets(tables);
+  data.writeTables(toSave); // use global data service to store tables
 }
-
 
 /// Generates unique ID for a table. Must receive either a list of tables or list of tableWidgets.
 /// 
 /// @param(optional) tables = a list of tables
 /// @param(optional)
-String generateTableId({List<table_model.Table>? tables, List<MovableTable>? tableWidgets, required int tableSize}){
+String generateTableId({List<table_model.TableModel>? tables, List<MovableTable>? tableWidgets, required int tableSize}){
 
   /// Returns corresponding table letter, given a size
   ///
@@ -111,8 +97,6 @@ String generateTableId({List<table_model.Table>? tables, List<MovableTable>? tab
       throw Exception("Both list parameters were null!");
   }
 
-  print(filteredTableIds);
-
   var frequency = [for (var i = 0; i < filteredTableIds.length; i++) false]; // generate frequency vector
 
   for(var id in filteredTableIds){
@@ -122,7 +106,6 @@ String generateTableId({List<table_model.Table>? tables, List<MovableTable>? tab
       frequency[tableIndex - 1] = true; // indexing starts from 0, subtract
     }
   }
-  print(frequency);
   //search 
   for(var i = 0; i < frequency.length; i++){
     if(frequency[i] == false) {

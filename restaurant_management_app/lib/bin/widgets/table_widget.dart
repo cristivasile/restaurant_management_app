@@ -4,7 +4,8 @@ import 'package:restaurant_management_app/bin/constants.dart' as constants;
 
 /// Movable table object
 ///
-///
+// TODO - this should probably be mutable but idk how - the private _position from the state is needed in order to store the tables.
+// ignore: must_be_immutable 
 class MovableTable extends StatefulWidget {
   final BoxConstraints constraints; //widget constraints received as parameter
   final String imagePath; //the corresponding table's image path
@@ -12,7 +13,7 @@ class MovableTable extends StatefulWidget {
   final int imageHeight; // height of the displayed image
   final int tableSize;
   late final String id;
-  final Offset
+  late Offset
       position; // position relative to the top left corner of the container
   MovableTable({
     Key? key,
@@ -73,20 +74,25 @@ class _MovableTableState extends State<MovableTable> {
             height: widget.imageHeight.toDouble()),
         onDragEnd: (DraggableDetails details) {
           setState(() {
-            final adjustment = MediaQuery.of(context).size.height -
+            final adjustmentx = MediaQuery.of(context).size.height -
                 widget.constraints.maxHeight;
+            final adjustmenty = MediaQuery.of(context).size.width -
+                widget.constraints.maxWidth;
             // details.offset is relative to the window instead of the container
             // => without this the item would be placed too low because of the app bar
 
-            //check if the position is inside the container
+            //check if the position is inside the container: right, left, top, bottom
             if (details.offset.dx + widget._imageWidth <
                     MediaQuery.of(context).size.width &&
-                details.offset.dx > 0 &&
-                details.offset.dy > 0 + adjustment &&
+                details.offset.dx > 0 + adjustmentx &&
+                details.offset.dy > 0 + adjustmenty &&
                 details.offset.dy + widget.imageHeight <
                     MediaQuery.of(context).size.height) {
+
               _position =
-                  Offset(details.offset.dx, details.offset.dy - adjustment);
+                  Offset(details.offset.dx - adjustmentx, details.offset.dy - adjustmenty);
+              widget.position = _position;
+              //TODO - add a callback to save position, or add a save changes button in floorplan class
             }
           });
         },
