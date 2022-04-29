@@ -85,7 +85,13 @@ class _FloorPlanState extends State<FloorPlan> {
                       ),
                     ],
                   ),
-                )
+                ),
+                // save changes button
+                FloatingActionButton(
+                        onPressed: () => {saveTables(_tables)},
+                        child: const Icon(Icons.save),
+                        backgroundColor: Colors.orange,
+                      ),
               ],
             ),
           ),
@@ -125,8 +131,6 @@ class _FloorPlanState extends State<FloorPlan> {
       ));
     });
     TableList.setTableList(getTablesFromTableWidgets(_tables)); //update static TableList
-    //TODO - decide if updates are inserted instantly
     //if not, this line needs to be removed
-    saveTables(_tables);
   }
 }

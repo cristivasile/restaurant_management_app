@@ -4,7 +4,7 @@ import 'package:restaurant_management_app/bin/constants.dart' as constants;
 
 /// Movable table object
 ///
-// TODO - this should probably be mutable but idk how - the private _position from the state is needed in order to store the tables.
+// TODO - this should be immutable but idk how - the private _position from the state is needed in order to store the tables.
 // ignore: must_be_immutable 
 class MovableTable extends StatefulWidget {
   final BoxConstraints constraints; //widget constraints received as parameter
@@ -27,6 +27,7 @@ class MovableTable extends StatefulWidget {
         super(key: key);
 
   @override
+  // ignore: no_logic_in_create_state
   State<MovableTable> createState() => _MovableTableState();
 }
 
@@ -74,9 +75,9 @@ class _MovableTableState extends State<MovableTable> {
             height: widget.imageHeight.toDouble()),
         onDragEnd: (DraggableDetails details) {
           setState(() {
-            final adjustmentx = MediaQuery.of(context).size.height -
+            final adjustmenty = MediaQuery.of(context).size.height -
                 widget.constraints.maxHeight;
-            final adjustmenty = MediaQuery.of(context).size.width -
+            final adjustmentx = MediaQuery.of(context).size.width -
                 widget.constraints.maxWidth;
             // details.offset is relative to the window instead of the container
             // => without this the item would be placed too low because of the app bar
@@ -92,7 +93,6 @@ class _MovableTableState extends State<MovableTable> {
               _position =
                   Offset(details.offset.dx - adjustmentx, details.offset.dy - adjustmenty);
               widget.position = _position;
-              //TODO - add a callback to save position, or add a save changes button in floorplan class
             }
           });
         },
