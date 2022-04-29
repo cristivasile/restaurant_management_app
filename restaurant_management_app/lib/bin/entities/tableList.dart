@@ -4,13 +4,18 @@ import 'package:restaurant_management_app/bin/services/tableService.dart';
 TableList? object;
 
 class TableList {
-  late List<Table> tables;
+  late List<Table> _tables;
   TableList._() {
-    tables = loadTables();
+    _tables = loadTables();
   }
 
-  static TableList getTableList() {
+  static List<Table> getTableList() {
     object ??= TableList._();
-    return object ?? TableList._();
+    return object!._tables;
+  }
+
+  static void setTableList(List<Table> newTables){
+    object ??= TableList._();
+    object!._tables = newTables;
   }
 }

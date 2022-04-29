@@ -51,13 +51,13 @@ List<table_model.Table> loadTables() {
   result.add(
       table_model.Table(tableSize: 2, xOffset: 850, yOffset: 50, id: "A1"));
   result.add(
-      table_model.Table(tableSize: 3, xOffset: 550, yOffset: 150, id: "A2"));
+      table_model.Table(tableSize: 3, xOffset: 550, yOffset: 150, id: "B1"));
   result.add(
-      table_model.Table(tableSize: 4, xOffset: 25, yOffset: 150, id: "A3"));
+      table_model.Table(tableSize: 4, xOffset: 25, yOffset: 150, id: "C1"));
   result.add(
-      table_model.Table(tableSize: 6, xOffset: 690, yOffset: 300, id: "A4"));
+      table_model.Table(tableSize: 6, xOffset: 690, yOffset: 300, id: "D1"));
   result.add(
-      table_model.Table(tableSize: 8, xOffset: 260, yOffset: 420, id: "A5"));
+      table_model.Table(tableSize: 8, xOffset: 260, yOffset: 420, id: "E1"));
 
   return result;
 }
@@ -68,4 +68,68 @@ List<table_model.Table> loadTables() {
 void saveTables(List<MovableTable> tables) {
   List<table_model.Table> toSave = getTablesFromTableWidgets(tables);
   //TODO - save somewhere
+}
+
+
+/// Generates unique ID for a table. Must receive either a list of tables or list of tableWidgets.
+/// 
+/// @param(optional) tables = a list of tables
+/// @param(optional)
+String generateTableId({List<table_model.Table>? tables, List<MovableTable>? tableWidgets, required int tableSize}){
+
+  /// Returns corresponding table letter, given a size
+  ///
+  String getTableLetterFromSize(){
+    switch (tableSize) {
+    case 2:
+      return 'A';
+    case 3:
+      return 'B';
+    case 4:
+      return 'C';
+    case 6:
+      return 'D';
+    case 8:
+      return 'E';
+  }
+    throw Exception("Invalid table size!");
+  }
+
+  if (tables != null && tableWidgets != null) {
+    throw Exception("Invalid parameters provided!");
+  }
+
+  var filteredTableIds = [];
+
+  if (tables != null){
+    filteredTableIds = tables.where((x) => x.tableSize == tableSize).map((x) {return x.id;}).toList(); // get tables of same size and select only ids
+  }
+  else if (tableWidgets != null){
+    filteredTableIds = tableWidgets.where((x) => x.tableSize == tableSize).map((x) {return x.id;}).toList(); // get tables of same size and select only ids
+  }
+  else{
+      throw Exception("Both list parameters were null!");
+  }
+
+  print(filteredTableIds);
+
+  var frequency = [for (var i = 0; i < filteredTableIds.length; i++) false]; // generate frequency vector
+
+  for(var id in filteredTableIds){
+    var tableIndex = int.parse(id.substring(1));
+
+    if (tableIndex - 1 < filteredTableIds.length) {
+      frequency[tableIndex - 1] = true; // indexing starts from 0, subtract
+    }
+  }
+  print(frequency);
+  //search 
+  for(var i = 0; i < frequency.length; i++){
+    if(frequency[i] == false) {
+      return "${getTableLetterFromSize()}${i + 1}";
+    } //indexing starts from 0;
+  }
+
+  // no unused index was found, return length + 1
+  return "${getTableLetterFromSize()}${frequency.length + 1}";
 }

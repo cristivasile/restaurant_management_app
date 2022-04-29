@@ -83,7 +83,7 @@ class _FloorPlanState extends State<FloorPlan> {
                 // load tables from somewhere on first build
                 firstBuild = false;
                 _tables = getWidgetsFromTables(
-                    TableList.getTableList().tables, childConstraints);
+                    TableList.getTableList(), childConstraints);
               }
 
               return Stack(
@@ -104,8 +104,9 @@ class _FloorPlanState extends State<FloorPlan> {
           constraints: _tablesBoxConstraints,
           tableSize: int.parse(dropdownValue),
           position: Offset.zero,
-          id: "A${_tables.length}"));
-      //TODO - generate or read ID
+          id: generateTableId(tableSize: int.parse(dropdownValue), tableWidgets: _tables),
+      ));
     });
+    TableList.setTableList(getTablesFromTableWidgets(_tables)); //update static TableList
   }
 }
