@@ -2,20 +2,20 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart' as constants;
 
+import '../entities/table_list.dart';
+
 /// Movable table object
 ///
-// TODO - this should be immutable but idk how - the private _position from the state is needed in order to store the tables.
 // ignore: must_be_immutable 
-class MovableTable extends StatefulWidget {
+class MovableTableWidget extends StatefulWidget {
   final BoxConstraints constraints; //widget constraints received as parameter
   final String imagePath; //the corresponding table's image path
   final int _imageWidth; // width of the displayed image
   final int imageHeight; // height of the displayed image
   final int tableSize;
   late final String id;
-  late Offset
-      position; // position relative to the top left corner of the container
-  MovableTable({
+  final Offset position; // position relative to the top left corner of the container
+  MovableTableWidget({
     Key? key,
     required this.constraints,
     required this.tableSize,
@@ -27,11 +27,10 @@ class MovableTable extends StatefulWidget {
         super(key: key);
 
   @override
-  // ignore: no_logic_in_create_state
-  State<MovableTable> createState() => _MovableTableState();
+  State<MovableTableWidget> createState() => _MovableTableWidgetState();
 }
 
-class _MovableTableState extends State<MovableTable> {
+class _MovableTableWidgetState extends State<MovableTableWidget> {
   late Offset _position;
 
   @override
@@ -90,9 +89,13 @@ class _MovableTableState extends State<MovableTable> {
                 details.offset.dy + widget.imageHeight <
                     MediaQuery.of(context).size.height) {
 
+              double xOffset = details.offset.dx - adjustmentx;
+              double yOffset = details.offset.dy - adjustmenty;
+
               _position =
-                  Offset(details.offset.dx - adjustmentx, details.offset.dy - adjustmenty);
-              widget.position = _position;
+                  Offset(xOffset, yOffset);
+
+              TableList.editTablePosition(widget.id, xOffset, yOffset);
             }
           });
         },

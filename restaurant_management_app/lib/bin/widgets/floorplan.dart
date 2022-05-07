@@ -17,7 +17,7 @@ bool firstBuild = true;
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
   String dropdownValue = '2';
-  List<MovableTable> _tables = [];
+  List<MovableTableWidget> _tableWidgets = [];
   List<TableModel> _tableModelList = []; //required for the first initialization of _tables
   bool read = false;
 
@@ -88,7 +88,7 @@ class _FloorPlanState extends State<FloorPlan> {
                 ),
                 // save changes button
                 FloatingActionButton(
-                        onPressed: () => {saveTables(_tables)},
+                        onPressed: () => {saveTables()},
                         child: const Icon(Icons.save),
                         backgroundColor: Colors.orange,
                       ),
@@ -105,12 +105,12 @@ class _FloorPlanState extends State<FloorPlan> {
               if (read && firstBuild) {
                 // load tables from somewhere on first build
                 firstBuild = false;
-                _tables = getWidgetsFromTables(
+                _tableWidgets = getWidgetsFromTables(
                     _tableModelList, childConstraints);
               }
 
               return Stack(
-                children: _tables,
+                children: _tableWidgets,
               );
             }),
           ),
@@ -122,15 +122,18 @@ class _FloorPlanState extends State<FloorPlan> {
   /// Adds a new table widget to the table list
   ///
   void addTable() {
-    setState(() {
-      _tables.add(MovableTable(
+    MovableTableWidget newTableWidget = MovableTableWidget(
           constraints: _tablesBoxConstraints,
           tableSize: int.parse(dropdownValue),
           position: Offset.zero,
-          id: generateTableId(tableSize: int.parse(dropdownValue), tableWidgets: _tables),
-      ));
+          id: generateTableId(tableSize: int.parse(dropdownValue), tableWidgets: _tableWidgets),
+      );
+
+    setState(() {
+      _tableWidgets.add(newTableWidget);
     });
-    TableList.setTableList(getTablesFromTableWidgets(_tables)); //update static TableList
-    //if not, this line needs to be removed
+
+    TableList.addTable(getTableModelFromWidget(newTableWidget));
   }
+
 }

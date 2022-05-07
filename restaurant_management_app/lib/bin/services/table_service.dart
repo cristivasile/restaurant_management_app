@@ -1,19 +1,21 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/main.dart';
+import '../entities/table_list.dart';
 import '../models/table_model.dart' as table_model;
+import '../models/table_model.dart';
 import '../widgets/table_widget.dart';
 
 /// Returns a list of MovableTable from a list of tables
 ///
 /// @param tables: a list of tables
 /// @param constraints: a MovableTable needs the BoxConstraints from where it is created
-List<MovableTable> getWidgetsFromTables(
+List<MovableTableWidget> getWidgetsFromTables(
     List<table_model.TableModel> tables, BoxConstraints constraints) {
-  List<MovableTable> result = [];
+  List<MovableTableWidget> result = [];
 
   for (table_model.TableModel table in tables) {
-    result.add(MovableTable(
+    result.add(MovableTableWidget(
       constraints: constraints,
       tableSize: table.tableSize,
       position: Offset(table.xOffset, table.yOffset),
@@ -28,10 +30,10 @@ List<MovableTable> getWidgetsFromTables(
 ///
 ///@param tableWidgets: list of widgets
 List<table_model.TableModel> getTablesFromTableWidgets(
-    List<MovableTable> tableWidgets) {
+    List<MovableTableWidget> tableWidgets) {
   List<table_model.TableModel> tables = [];
 
-  for (MovableTable widget in tableWidgets) {
+  for (MovableTableWidget widget in tableWidgets) {
     tables.add(table_model.TableModel(
         id: widget.id,
         xOffset: widget.position.dx,
@@ -42,18 +44,18 @@ List<table_model.TableModel> getTablesFromTableWidgets(
   return tables;
 }
 
-/// Loads a list of tables and returns it
+/// Loads a list of tables, saves it to TableList and returns it
 ///
 Future<List<table_model.TableModel>> loadTables() async {
   List<table_model.TableModel> result = await data.readTables();
+  TableList.setTableList(result);
   return result;
 }
 
 ///Saves tables to disk
 ///
-///@param tables: MovableTable widgets
-void saveTables(List<MovableTable> tables) {
-  List<table_model.TableModel> toSave = getTablesFromTableWidgets(tables);
+Future<void> saveTables() async {
+  List<table_model.TableModel> toSave = await TableList.getTableList();
   data.writeTables(toSave); // use global data service to store tables
 }
 
@@ -61,7 +63,7 @@ void saveTables(List<MovableTable> tables) {
 /// 
 /// @param(optional) tables = a list of tables
 /// @param(optional)
-String generateTableId({List<table_model.TableModel>? tables, List<MovableTable>? tableWidgets, required int tableSize}){
+String generateTableId({List<table_model.TableModel>? tables, List<MovableTableWidget>? tableWidgets, required int tableSize}){
 
   /// Returns corresponding table letter, given a size
   ///
@@ -115,4 +117,9 @@ String generateTableId({List<table_model.TableModel>? tables, List<MovableTable>
 
   // no unused index was found, return length + 1
   return "${getTableLetterFromSize()}${frequency.length + 1}";
+
 }
+
+TableModel getTableModelFromWidget(MovableTableWidget widget){
+  return TableModel(id: widget.id, xOffset: widget.position.dx, yOffset: widget.position.dy, tableSize: widget.tableSize);
+} 

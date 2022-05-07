@@ -20,4 +20,23 @@ class TableList {
     object ??= TableList._();
     object!._tables = newTables;
   }
+
+  /// Modifies a table's current position in the table list.
+  ///
+  static void editTablePosition(String id, double xOffset, double yOffset){
+    object ??= TableList._();
+    List<TableModel> tables = object!._tables;
+    for(TableModel table in tables) {
+      if(table.id == id){
+        table.xOffset = xOffset;
+        table.yOffset = yOffset;
+      }
+    }
+  }
+
+  static void addTable(TableModel table){
+    object ??= TableList._();
+    object!._tables.add(table);
+  }
+
 }
