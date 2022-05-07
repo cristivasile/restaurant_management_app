@@ -88,6 +88,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
                 details.offset.dy > 0 + adjustmenty &&
                 details.offset.dy + widget.imageHeight <
                     MediaQuery.of(context).size.height) {
+              //TODO - BUG tables can't be moved to the edge, don't know the cause
 
               double xOffset = details.offset.dx - adjustmentx;
               double yOffset = details.offset.dy - adjustmenty;
