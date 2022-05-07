@@ -14,7 +14,6 @@ class FloorPlan extends StatefulWidget {
 }
 
 bool _firstBuild = true;
-const double _floorMargin = 10;
 
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
@@ -51,14 +50,52 @@ class _FloorPlanState extends State<FloorPlan> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // ignore: avoid_unnecessary_containers
-                  Container(
+                  Container( // add table group
                     // container is necessary bc. it groups the selector and button together
                     child: Row(
                       children: [
-                        //table size selector
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
-                          child: DropdownButton<String>(
+                          child: DropdownButton<String>(  //table size selector
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_downward),
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.black),
+                            underline: Container(
+                              height: 2,
+                              color: mainColor,
+                            ),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue!;
+                              });
+                            },
+                            items: <String>['2', '3', '4', '6', '8']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        //add table button
+                        FloatingActionButton(
+                          onPressed: () => {addTable()},
+                          child: const Icon(Icons.add),
+                          backgroundColor: mainColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // ignore: avoid_unnecessary_containers
+                  Container(
+                    // container is necessary bc. it groups the selector and button together
+                    child: Row( // add table group
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          child: DropdownButton<String>(  //table size selector
                             value: dropdownValue,
                             icon: const Icon(Icons.arrow_downward),
                             elevation: 16,
@@ -102,10 +139,10 @@ class _FloorPlanState extends State<FloorPlan> {
             // Container for the displayed tables
               Container(// for floor color and margin
                 color: accent2Color,
-                margin: const EdgeInsets.all(_floorMargin),
+                margin: const EdgeInsets.all(floorMargin),
                 child: SizedBox( // defines fixed size for child Stack that would be infinite.
-                  width: constraints.maxWidth - (_floorMargin * 2), // - margin * 2
-                  height: (constraints.maxHeight * 7 / 8) - (_floorMargin * 2), // - margin * 2
+                  width: constraints.maxWidth - (floorMargin * 2), // - margin * 2
+                  height: (constraints.maxHeight * 7 / 8) - (floorMargin * 2), // - margin * 2
                   child: LayoutBuilder(builder: (context, childConstraints) {
                     _tablesBoxConstraints = childConstraints;
               

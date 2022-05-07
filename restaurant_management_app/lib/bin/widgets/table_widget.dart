@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart' as constants;
+import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
 
 import '../entities/table_list.dart';
 
@@ -75,11 +76,12 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
         onDragEnd: (DraggableDetails details) {
           setState(() {
             final adjustmenty = MediaQuery.of(context).size.height -
-                widget.constraints.maxHeight;
+                widget.constraints.maxHeight - constants.floorMargin;
             final adjustmentx = MediaQuery.of(context).size.width -
-                widget.constraints.maxWidth;
+                widget.constraints.maxWidth - constants.floorMargin;
             // details.offset is relative to the window instead of the container
             // => without this the item would be placed too low because of the app bar
+            // + margin of the floor
 
             //check if the position is inside the container: right, left, top, bottom
             if (details.offset.dx + widget._imageWidth <
@@ -88,7 +90,6 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
                 details.offset.dy > 0 + adjustmenty &&
                 details.offset.dy + widget.imageHeight <
                     MediaQuery.of(context).size.height) {
-              //TODO - BUG tables can't be moved to the edge, don't know the cause
 
               double xOffset = details.offset.dx - adjustmentx;
               double yOffset = details.offset.dy - adjustmenty;
