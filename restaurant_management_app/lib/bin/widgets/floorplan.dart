@@ -17,9 +17,11 @@ bool _firstBuild = true;
 
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
-  String dropdownValue = '2';
+  String addDropdownValue = '2';
+  String removeDropdownValue = 'none';
   List<MovableTableWidget> _tableWidgets = [];
   List<TableModel> _tableModelList = []; //required for the first initialization of _tables
+  List<String> _tableIds = ['none'];
   bool read = false;
 
   @override
@@ -28,11 +30,17 @@ class _FloorPlanState extends State<FloorPlan> {
     init();
   }
 
-  //separate function because it needs to be async
+  //separate function because it is async and initState can not be async
   Future<void> init() async{
     _tableModelList = await loadTables();
     setState(() {
       read = true;
+
+      if(_tableModelList.isNotEmpty){ //dropdown must have at least one value, only update if tables exist
+        _tableIds = _tableModelList.map((e) => e.id).toList();
+        _tableIds.sort();
+        removeDropdownValue = _tableIds[0];
+      }
     });
   }
 
@@ -57,7 +65,7 @@ class _FloorPlanState extends State<FloorPlan> {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
                           child: DropdownButton<String>(  //table size selector
-                            value: dropdownValue,
+                            value: addDropdownValue,
                             icon: const Icon(Icons.arrow_downward),
                             elevation: 16,
                             style: const TextStyle(color: Colors.black),
@@ -67,7 +75,7 @@ class _FloorPlanState extends State<FloorPlan> {
                             ),
                             onChanged: (String? newValue) {
                               setState(() {
-                                dropdownValue = newValue!;
+                                addDropdownValue = newValue!;
                               });
                             },
                             items: <String>['2', '3', '4', '6', '8']
@@ -88,7 +96,7 @@ class _FloorPlanState extends State<FloorPlan> {
                       ],
                     ),
                   ),
-                  // ignore: avoid_unnecessary_containers
+                   // ignore: avoid_unnecessary_containers
                   Container(
                     // container is necessary bc. it groups the selector and button together
                     child: Row( // add table group
@@ -96,7 +104,7 @@ class _FloorPlanState extends State<FloorPlan> {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
                           child: DropdownButton<String>(  //table size selector
-                            value: dropdownValue,
+                            value: removeDropdownValue,
                             icon: const Icon(Icons.arrow_downward),
                             elevation: 16,
                             style: const TextStyle(color: Colors.black),
@@ -106,10 +114,10 @@ class _FloorPlanState extends State<FloorPlan> {
                             ),
                             onChanged: (String? newValue) {
                               setState(() {
-                                dropdownValue = newValue!;
+                                removeDropdownValue = newValue!;
                               });
                             },
-                            items: <String>['2', '3', '4', '6', '8']
+                            items: _tableIds
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -120,19 +128,33 @@ class _FloorPlanState extends State<FloorPlan> {
                         ),
                         //add table button
                         FloatingActionButton(
-                          onPressed: () => {addTable()},
-                          child: const Icon(Icons.add),
+                          onPressed: () => {deleteTable()},
+                          child: const Icon(Icons.delete),
                           backgroundColor: mainColor,
                         ),
                       ],
                     ),
                   ),
-                  // save changes button
-                  FloatingActionButton(
+                  // ignore: avoid_unnecessary_containers
+                  Container(
+                    // container is necessary bc. it groups the text and button together
+                    child: Row( // add table group
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 5,),
+                          child: const Text("Save")
+                          ),
+                        // save changes button
+                        FloatingActionButton(
                           onPressed: () => {saveTables()},
                           child: const Icon(Icons.save),
                           backgroundColor: mainColor,
                         ),
+                      ],
+                    ),
+                  ),
+
+
                 ],
               ),
             ),
@@ -163,22 +185,51 @@ class _FloorPlanState extends State<FloorPlan> {
         ),
       );
     });
+
+
+    
   }
 
-  /// Adds a new table widget to the table list
-  ///
   void addTable() {
+    UniqueKey key = UniqueKey();
     MovableTableWidget newTableWidget = MovableTableWidget(
+          key: key, //tables must have a key, otherwise states can jump over to another object
           constraints: _tablesBoxConstraints,
-          tableSize: int.parse(dropdownValue),
+          tableSize: int.parse(addDropdownValue),
           position: Offset.zero,
-          id: generateTableId(tableSize: int.parse(dropdownValue), tableWidgets: _tableWidgets),
+          id: generateTableId(tableSize: int.parse(addDropdownValue), tableWidgets: _tableWidgets),
       );
 
     setState(() {
       _tableWidgets.add(newTableWidget);
+
+      if(_tableIds[0] == 'none') { // if list is empty -> only happens when adding the first table
+        _tableIds = [];
+      }
+
+      _tableIds.add(newTableWidget.id);
+      _tableIds.sort();
+      removeDropdownValue = _tableIds[0];
     });
 
     TableList.addTable(getTableModelFromWidget(newTableWidget));
+  }
+
+  void deleteTable() async{
+    final String id = removeDropdownValue;
+    if(id != 'none'){ //check that a table is selected
+      TableList.removeTable(id);
+
+      setState(() {
+        _tableWidgets.removeWhere((element) => element.id == id);
+        _tableIds.removeWhere((element) => element == id);
+
+        if(_tableIds.isEmpty) { //check if list is empty because it will cause an exception
+          _tableIds.add('none');
+        }
+
+        removeDropdownValue = _tableIds[0];
+      });
+    }
   }
 }

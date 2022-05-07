@@ -1,13 +1,11 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart' as constants;
-import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
 
 import '../entities/table_list.dart';
 
 /// Movable table object
 ///
-// ignore: must_be_immutable 
 class MovableTableWidget extends StatefulWidget {
   final BoxConstraints constraints; //widget constraints received as parameter
   final String imagePath; //the corresponding table's image path
@@ -81,7 +79,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
                 widget.constraints.maxWidth - constants.floorMargin;
             // details.offset is relative to the window instead of the container
             // => without this the item would be placed too low because of the app bar
-            // + margin of the floor
+            // + margin of the container
 
             //check if the position is inside the container: right, left, top, bottom
             if (details.offset.dx + widget._imageWidth <

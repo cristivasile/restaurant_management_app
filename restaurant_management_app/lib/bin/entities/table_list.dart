@@ -39,4 +39,11 @@ class TableList {
     object!._tables.add(table);
   }
 
+  ///Removes a table with a given id
+  static void removeTable(String tableId){
+    object ??=TableList._();
+    object!._tables.removeWhere((element) => element.id == tableId);
+    return;
+  }
+
 }

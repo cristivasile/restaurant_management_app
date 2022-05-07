@@ -15,7 +15,9 @@ List<MovableTableWidget> getWidgetsFromTables(
   List<MovableTableWidget> result = [];
 
   for (table_model.TableModel table in tables) {
+    UniqueKey key = UniqueKey();
     result.add(MovableTableWidget(
+      key: key, //assigns new unique key to prevent states from jumping over
       constraints: constraints,
       tableSize: table.tableSize,
       position: Offset(table.xOffset, table.yOffset),
