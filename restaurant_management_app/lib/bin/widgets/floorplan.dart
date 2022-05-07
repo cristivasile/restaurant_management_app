@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_management_app/bin/constants.dart';
 import 'package:restaurant_management_app/bin/entities/table_list.dart';
 import 'package:restaurant_management_app/bin/models/table_model.dart';
 import 'package:restaurant_management_app/bin/services/table_service.dart';
@@ -12,7 +13,8 @@ class FloorPlan extends StatefulWidget {
   State<FloorPlan> createState() => _FloorPlanState();
 }
 
-bool firstBuild = true;
+bool _firstBuild = true;
+const double _floorMargin = 10;
 
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
@@ -38,83 +40,90 @@ class _FloorPlanState extends State<FloorPlan> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        children: [
-          SizedBox(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight * 1 / 8,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // ignore: avoid_unnecessary_containers
-                Container(
-                  // container is necessary bc. it groups the selector and button together
-                  child: Row(
-                    children: [
-                      //table size selector
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        child: DropdownButton<String>(
-                          value: dropdownValue,
-                          icon: const Icon(Icons.arrow_downward),
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.black),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.green,
+      return Container( // for background color
+        color: accent1Color,
+        child: Column(
+          children: [
+            SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight * 1 / 8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // ignore: avoid_unnecessary_containers
+                  Container(
+                    // container is necessary bc. it groups the selector and button together
+                    child: Row(
+                      children: [
+                        //table size selector
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_downward),
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.black),
+                            underline: Container(
+                              height: 2,
+                              color: mainColor,
+                            ),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue!;
+                              });
+                            },
+                            items: <String>['2', '3', '4', '6', '8']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
                           ),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValue = newValue!;
-                            });
-                          },
-                          items: <String>['2', '3', '4', '6', '8']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
                         ),
-                      ),
-                      //add table button
-                      FloatingActionButton(
-                        onPressed: () => {addTable()},
-                        child: const Icon(Icons.add),
-                        backgroundColor: Colors.lightGreen,
-                      ),
-                    ],
+                        //add table button
+                        FloatingActionButton(
+                          onPressed: () => {addTable()},
+                          child: const Icon(Icons.add),
+                          backgroundColor: mainColor,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                // save changes button
-                FloatingActionButton(
-                        onPressed: () => {saveTables()},
-                        child: const Icon(Icons.save),
-                        backgroundColor: Colors.orange,
-                      ),
-              ],
+                  // save changes button
+                  FloatingActionButton(
+                          onPressed: () => {saveTables()},
+                          child: const Icon(Icons.save),
+                          backgroundColor: mainColor,
+                        ),
+                ],
+              ),
             ),
-          ),
-          // Container for the displayed tables
-          SizedBox(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight * 7 / 8,
-            child: LayoutBuilder(builder: (context, childConstraints) {
-              _tablesBoxConstraints = childConstraints;
-
-              if (read && firstBuild) {
-                // load tables from somewhere on first build
-                firstBuild = false;
-                _tableWidgets = getWidgetsFromTables(
-                    _tableModelList, childConstraints);
-              }
-
-              return Stack(
-                children: _tableWidgets,
-              );
-            }),
-          ),
-        ],
+            // Container for the displayed tables
+              Container(// for floor color and margin
+                color: accent2Color,
+                margin: const EdgeInsets.all(_floorMargin),
+                child: SizedBox( // defines fixed size for child Stack that would be infinite.
+                  width: constraints.maxWidth - (_floorMargin * 2), // - margin * 2
+                  height: (constraints.maxHeight * 7 / 8) - (_floorMargin * 2), // - margin * 2
+                  child: LayoutBuilder(builder: (context, childConstraints) {
+                    _tablesBoxConstraints = childConstraints;
+              
+                    if (read && _firstBuild) {
+                      // load tables from somewhere on first build
+                      _firstBuild = false;
+                      _tableWidgets = getWidgetsFromTables(
+                          _tableModelList, childConstraints);
+                    }
+              
+                    return Stack(
+                      children: _tableWidgets,
+                    );
+                  }),
+                ),
+              ),
+          ],
+        ),
       );
     });
   }
@@ -135,5 +144,4 @@ class _FloorPlanState extends State<FloorPlan> {
 
     TableList.addTable(getTableModelFromWidget(newTableWidget));
   }
-
 }

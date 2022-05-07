@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_management_app/bin/constants.dart';
 import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
 
 import 'bin/data_providers/data_provider.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Welcome to Flutter',
       home: Scaffold(
         appBar: AppBar(
+          backgroundColor: mainColor,
           title: const Text('Floor plan editor'),
         ),
         body: const Center(
