@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:restaurant_management_app/bin/data_providers/data_provider.dart';
 import 'package:restaurant_management_app/main.dart';
 import '../entities/table_list.dart';
 import '../models/table_model.dart' as table_model;
@@ -48,16 +49,16 @@ List<table_model.TableModel> getTablesFromTableWidgets(
 
 /// Loads a list of tables, saves it to TableList and returns it
 ///
-Future<List<table_model.TableModel>> loadTables() async {
-  List<table_model.TableModel> result = await data.readTables();
-  TableList.setTableList(result);
-  return result;
+Future<List<TableModel>> loadTables() async {
+  DataProvider provider = JsonProvider();
+  List<TableModel> tables = await provider.readTables();
+  return tables;
 }
 
 ///Saves tables to disk
 ///
 Future<void> saveTables() async {
-  List<table_model.TableModel> toSave = await TableList.getTableList();
+  List<TableModel> toSave = await TableList.getTableList();
   data.writeTables(toSave); // use global data service to store tables
 }
 
@@ -65,7 +66,7 @@ Future<void> saveTables() async {
 /// 
 /// @param(optional) tables = a list of tables
 /// @param(optional)
-String generateTableId({List<table_model.TableModel>? tables, List<MovableTableWidget>? tableWidgets, required int tableSize}){
+String generateTableId({List<TableModel>? tables, List<MovableTableWidget>? tableWidgets, required int tableSize}){
 
   /// Returns corresponding table letter, given a size
   ///

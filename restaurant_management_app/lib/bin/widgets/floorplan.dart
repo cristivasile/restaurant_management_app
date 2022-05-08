@@ -13,16 +13,14 @@ class FloorPlan extends StatefulWidget {
   State<FloorPlan> createState() => _FloorPlanState();
 }
 
-bool _firstBuild = true;
-
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
   String addDropdownValue = '2';
-  String removeDropdownValue = 'none';
-  List<MovableTableWidget> _tableWidgets = [];
-  List<TableModel> _tableModelList = []; //required for the first initialization of _tables
-  List<String> _tableIds = ['none'];
-  bool read = false;
+  late String removeDropdownValue = 'none';
+  late List<MovableTableWidget> _tableWidgets = [];
+  late List<TableModel> _tableModelList = []; //required for the first initialization of _tableWidgets
+  late List<String> _tableIds = ['none'];
+  late bool read = false;
 
   @override
   void initState(){
@@ -32,7 +30,7 @@ class _FloorPlanState extends State<FloorPlan> {
 
   //separate function because it is async and initState can not be async
   Future<void> init() async{
-    _tableModelList = await loadTables();
+    _tableModelList = await TableList.getTableList();
     setState(() {
       read = true;
 
@@ -168,9 +166,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   child: LayoutBuilder(builder: (context, childConstraints) {
                     _tablesBoxConstraints = childConstraints;
               
-                    if (read && _firstBuild) {
-                      // load tables from somewhere on first build
-                      _firstBuild = false;
+                    if (read) {
+                      // load tables from TableList
                       _tableWidgets = getWidgetsFromTables(
                           _tableModelList, childConstraints);
                     }
