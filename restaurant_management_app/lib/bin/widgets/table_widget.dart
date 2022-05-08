@@ -86,7 +86,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
                     MediaQuery.of(context).size.width &&
                 details.offset.dx > 0 + adjustmentx &&
                 details.offset.dy > 0 + adjustmenty &&
-                details.offset.dy + widget.imageHeight <
+                details.offset.dy + widget.imageHeight + constants.floorMargin <
                     MediaQuery.of(context).size.height) {
 
               double xOffset = details.offset.dx - adjustmentx;
