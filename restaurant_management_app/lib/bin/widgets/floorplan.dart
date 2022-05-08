@@ -15,12 +15,13 @@ class FloorPlan extends StatefulWidget {
 
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
-  String addDropdownValue = '2';
-  late String removeDropdownValue = 'none';
-  late List<MovableTableWidget> _tableWidgets = [];
-  late List<TableModel> _tableModelList = []; //required for the first initialization of _tableWidgets
-  late List<String> _tableIds = ['none'];
-  late bool read = false;
+  String _addDropdownValue = '2';
+  String _removeDropdownValue = 'none';
+  List<MovableTableWidget> _tableWidgets = [];
+  List<TableModel> _tableModelList = []; //required for the first initialization of _tableWidgets
+  List<String> _tableIds = ['none'];
+  bool _read = false;
+  bool _firstBuild = true;
 
   @override
   void initState(){
@@ -32,12 +33,12 @@ class _FloorPlanState extends State<FloorPlan> {
   Future<void> init() async{
     _tableModelList = await TableList.getTableList();
     setState(() {
-      read = true;
+      _read = true;
 
       if(_tableModelList.isNotEmpty){ //dropdown must have at least one value, only update if tables exist
         _tableIds = _tableModelList.map((e) => e.id).toList();
         _tableIds.sort();
-        removeDropdownValue = _tableIds[0];
+        _removeDropdownValue = _tableIds[0];
       }
     });
   }
@@ -63,7 +64,7 @@ class _FloorPlanState extends State<FloorPlan> {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
                           child: DropdownButton<String>(  //table size selector
-                            value: addDropdownValue,
+                            value: _addDropdownValue,
                             icon: const Icon(Icons.arrow_downward),
                             elevation: 16,
                             style: const TextStyle(color: Colors.black),
@@ -73,7 +74,7 @@ class _FloorPlanState extends State<FloorPlan> {
                             ),
                             onChanged: (String? newValue) {
                               setState(() {
-                                addDropdownValue = newValue!;
+                                _addDropdownValue = newValue!;
                               });
                             },
                             items: <String>['2', '3', '4', '6', '8']
@@ -102,7 +103,7 @@ class _FloorPlanState extends State<FloorPlan> {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
                           child: DropdownButton<String>(  //table size selector
-                            value: removeDropdownValue,
+                            value: _removeDropdownValue,
                             icon: const Icon(Icons.arrow_downward),
                             elevation: 16,
                             style: const TextStyle(color: Colors.black),
@@ -112,7 +113,7 @@ class _FloorPlanState extends State<FloorPlan> {
                             ),
                             onChanged: (String? newValue) {
                               setState(() {
-                                removeDropdownValue = newValue!;
+                                _removeDropdownValue = newValue!;
                               });
                             },
                             items: _tableIds
@@ -166,8 +167,9 @@ class _FloorPlanState extends State<FloorPlan> {
                   child: LayoutBuilder(builder: (context, childConstraints) {
                     _tablesBoxConstraints = childConstraints;
               
-                    if (read) {
+                    if (_read && _firstBuild) {
                       // load tables from TableList
+                      _firstBuild = false;
                       _tableWidgets = getWidgetsFromTables(
                           _tableModelList, childConstraints);
                     }
@@ -192,9 +194,9 @@ class _FloorPlanState extends State<FloorPlan> {
     MovableTableWidget newTableWidget = MovableTableWidget(
           key: key, //tables must have a key, otherwise states can jump over to another object
           constraints: _tablesBoxConstraints,
-          tableSize: int.parse(addDropdownValue),
+          tableSize: int.parse(_addDropdownValue),
           position: Offset.zero,
-          id: generateTableId(tableSize: int.parse(addDropdownValue), tableWidgets: _tableWidgets),
+          id: generateTableId(tableSize: int.parse(_addDropdownValue), tableWidgets: _tableWidgets),
       );
 
     setState(() {
@@ -206,14 +208,14 @@ class _FloorPlanState extends State<FloorPlan> {
 
       _tableIds.add(newTableWidget.id);
       _tableIds.sort();
-      removeDropdownValue = _tableIds[0];
+      _removeDropdownValue = _tableIds[0];
     });
 
     TableList.addTable(getTableModelFromWidget(newTableWidget));
   }
 
   void deleteTable() async{
-    final String id = removeDropdownValue;
+    final String id = _removeDropdownValue;
     if(id != 'none'){ //check that a table is selected
       TableList.removeTable(id);
 
@@ -225,7 +227,7 @@ class _FloorPlanState extends State<FloorPlan> {
           _tableIds.add('none');
         }
 
-        removeDropdownValue = _tableIds[0];
+        _removeDropdownValue = _tableIds[0];
       });
     }
   }
