@@ -37,12 +37,14 @@ List<ProductModel> products = [
   ProductModel(name: "Soup", price: 510, category: "Main courses"),
 ];
 
+//menu window widget
 class Menu extends StatelessWidget {
   const Menu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      //list of each section
       controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
         return MenuSection(title: sections[index]);
@@ -52,6 +54,7 @@ class Menu extends StatelessWidget {
   }
 }
 
+//menu section/category widget
 class MenuSection extends StatefulWidget {
   final String title;
 
@@ -71,6 +74,7 @@ class _MenuSectionState extends State<MenuSection> {
       child: Column(
         children: <Widget>[
           Container(
+            // top bar containing title and expand button
             color: accent1Color,
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: Row(
@@ -141,6 +145,7 @@ class _MenuSectionState extends State<MenuSection> {
   }
 }
 
+//Expanded content of a section
 class MenuSectionContent extends StatelessWidget {
   final bool expanded;
   final double collapsedHeight;
@@ -163,6 +168,7 @@ class MenuSectionContent extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return AnimatedContainer(
+      //expand animation
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       width: screenWidth,
@@ -174,6 +180,7 @@ class MenuSectionContent extends StatelessWidget {
   }
 }
 
+//Single item in a section's expanded tab
 class MenuItem extends StatelessWidget {
   final String name;
   final double price;
