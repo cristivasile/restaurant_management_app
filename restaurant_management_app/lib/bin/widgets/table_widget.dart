@@ -12,14 +12,17 @@ class MovableTableWidget extends StatefulWidget {
   final int _imageWidth; // width of the displayed image
   final int imageHeight; // height of the displayed image
   final int tableSize;
-  late final String id;
-  final Offset position; // position relative to the top left corner of the container
+  final String id;
+  final int floor;
+  final Offset
+      position; // position relative to the top left corner of the container
   MovableTableWidget({
     Key? key,
     required this.constraints,
     required this.tableSize,
     required this.position,
     required this.id,
+    required this.floor,
   })  : imagePath = getImagePath(tableSize),
         _imageWidth = getImageSize(tableSize)[0],
         imageHeight = getImageSize(tableSize)[1],
@@ -74,9 +77,11 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
         onDragEnd: (DraggableDetails details) {
           setState(() {
             final adjustmenty = MediaQuery.of(context).size.height -
-                widget.constraints.maxHeight - constants.floorMargin;
+                widget.constraints.maxHeight -
+                constants.floorMargin;
             final adjustmentx = MediaQuery.of(context).size.width -
-                widget.constraints.maxWidth - constants.floorMargin;
+                widget.constraints.maxWidth -
+                constants.floorMargin;
             // details.offset is relative to the window instead of the container
             // => without this the item would be placed too low because of the app bar
             // + margin of the container
@@ -88,12 +93,10 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
                 details.offset.dy > 0 + adjustmenty &&
                 details.offset.dy + widget.imageHeight <
                     MediaQuery.of(context).size.height) {
-
               double xOffset = details.offset.dx - adjustmentx;
               double yOffset = details.offset.dy - adjustmenty;
 
-              _position =
-                  Offset(xOffset, yOffset);
+              _position = Offset(xOffset, yOffset);
 
               TableList.editTablePosition(widget.id, xOffset, yOffset);
             }
