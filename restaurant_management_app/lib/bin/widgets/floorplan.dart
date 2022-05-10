@@ -5,6 +5,8 @@ import 'package:restaurant_management_app/bin/models/table_model.dart';
 import 'package:restaurant_management_app/bin/services/table_service.dart';
 import 'package:restaurant_management_app/bin/widgets/table_widget.dart';
 
+import 'custom_button.dart';
+
 /// Floor plan builder
 class FloorPlan extends StatefulWidget {
   const FloorPlan({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class FloorPlan extends StatefulWidget {
 
 const double buttonRowRatio = 1 / 8;
 const double floorSectionRatio = 1 - buttonRowRatio;
+const double buttonSize = 45;
 
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
@@ -64,6 +67,7 @@ class _FloorPlanState extends State<FloorPlan> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
                   Container(
                       child: Row(
@@ -90,8 +94,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   )),
                   // ignore: avoid_unnecessary_containers
                   Container(
+                    // Container is necessary for grouping
                     // add table group
-                    // container is necessary bc. it groups the selector and button together
                     child: Row(
                       children: [
                         Container(
@@ -121,17 +125,18 @@ class _FloorPlanState extends State<FloorPlan> {
                           ),
                         ),
                         //add table button
-                        FloatingActionButton(
-                          onPressed: () => {addTable()},
-                          child: const Icon(Icons.add),
-                          backgroundColor: mainColor,
+                        CustomButton(
+                          size: buttonSize,
+                          icon: const Icon(Icons.add),
+                          color: mainColor,
+                          function: () => {addTable()},
                         ),
                       ],
                     ),
                   ),
+                  // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
                   Container(
-                    // container is necessary bc. it groups the selector and button together
                     child: Row(
                       // delete table group
                       children: [
@@ -162,17 +167,18 @@ class _FloorPlanState extends State<FloorPlan> {
                           ),
                         ),
                         //delete table button
-                        FloatingActionButton(
-                          onPressed: () => {deleteTable()},
-                          child: const Icon(Icons.delete),
-                          backgroundColor: mainColor,
+                        CustomButton(
+                          size: buttonSize,
+                          icon: const Icon(Icons.delete),
+                          color: mainColor,
+                          function: () => {deleteTable()},
                         ),
                       ],
                     ),
                   ),
+                  // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
                   Container(
-                    // container is necessary bc. it groups the text and button together
                     child: Row(
                       // save changes group
                       children: [
@@ -182,10 +188,11 @@ class _FloorPlanState extends State<FloorPlan> {
                             ),
                             child: const Text("Save")),
                         // save changes button
-                        FloatingActionButton(
-                          onPressed: () => {saveTables()},
-                          child: const Icon(Icons.save),
-                          backgroundColor: mainColor,
+                        CustomButton(
+                          size: buttonSize,
+                          icon: const Icon(Icons.save),
+                          color: mainColor,
+                          function: () => {saveTables()},
                         ),
                       ],
                     ),
