@@ -13,6 +13,9 @@ class FloorPlan extends StatefulWidget {
   State<FloorPlan> createState() => _FloorPlanState();
 }
 
+const double buttonRowRatio = 1 / 8;
+const double floorSectionRatio = 1 - buttonRowRatio;
+
 class _FloorPlanState extends State<FloorPlan> {
   late BoxConstraints _tablesBoxConstraints;
   int currentFloor = 0;
@@ -57,7 +60,7 @@ class _FloorPlanState extends State<FloorPlan> {
             SizedBox(
               // top container
               width: constraints.maxWidth,
-              height: constraints.maxHeight * 1 / 8,
+              height: constraints.maxHeight * buttonRowRatio,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -198,7 +201,7 @@ class _FloorPlanState extends State<FloorPlan> {
               child: SizedBox(
                 // defines fixed size for child Stack that would be infinite.
                 width: constraints.maxWidth - (floorMargin * 2), // - margin * 2
-                height: (constraints.maxHeight * 7 / 8) -
+                height: (constraints.maxHeight * floorSectionRatio) -
                     (floorMargin * 2), // - margin * 2
                 child: LayoutBuilder(builder: (context, childConstraints) {
                   _tablesBoxConstraints = childConstraints;
