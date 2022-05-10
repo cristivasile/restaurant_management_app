@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'dart:math';
+
+import '../models/product_model.dart';
+
+const double expandedMaxHeight = 400;
 
 List<String> sections = [
   "Appetizers",
@@ -7,6 +12,29 @@ List<String> sections = [
   "Sides",
   "Soft drinks",
   "Spirits"
+];
+
+Map sectionIcons = {
+  'Appetizers': Icons.apple,
+  'Main courses': Icons.food_bank,
+  'Sides': Icons.food_bank_outlined,
+  'Soft drinks': Icons.local_drink,
+  'Spirits': Icons.wine_bar
+};
+
+//TODO - delete hardcoded list
+List<ProductModel> products = [
+  ProductModel(category: "Appetizers", price: 103.5, name: "Appetizer #1"),
+  ProductModel(name: "Whiskey", price: 235, category: "Spirits"),
+  ProductModel(name: "Vodka", price: 214, category: "Spirits"),
+  ProductModel(name: "Red meat", price: 143, category: "Main courses"),
+  ProductModel(name: "Irish schnitzel", price: 72, category: "Main courses"),
+  ProductModel(name: "Coca cola", price: 30, category: "Soft drinks"),
+  ProductModel(name: "Sprite", price: 32, category: "Soft drinks"),
+  ProductModel(name: "Fanta", price: 28.54, category: "Soft drinks"),
+  ProductModel(name: "French fries", price: 27, category: "Sides"),
+  ProductModel(name: "Drunk fish", price: 929, category: "Main courses"),
+  ProductModel(name: "Soup", price: 510, category: "Main courses"),
 ];
 
 class Menu extends StatelessWidget {
@@ -49,6 +77,7 @@ class _MenuSectionState extends State<MenuSection> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 IconButton(
+                    // expand button
                     icon: Container(
                       height: 50.0,
                       width: 50.0,
@@ -72,6 +101,7 @@ class _MenuSectionState extends State<MenuSection> {
                       });
                     }),
                 Text(
+                  // Section title
                   widget.title,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, color: mainColor),
@@ -80,13 +110,30 @@ class _MenuSectionState extends State<MenuSection> {
             ),
           ),
           MenuSectionContent(
+              // expanded content
               expanded: expandFlag,
+              itemCount: products
+                  .where((element) => element.category == widget.title)
+                  .toList()
+                  .length,
               child: ListView.builder(
                 controller: ScrollController(),
                 itemBuilder: (BuildContext context, int index) {
-                  return MenuItem(index: index);
+                  List<ProductModel> items = products
+                      .where((element) => element.category == widget.title)
+                      .toList();
+
+                  items.sort();
+                  return MenuItem(
+                    price: items[index].price,
+                    name: items[index].name,
+                    category: widget.title,
+                  );
                 },
-                itemCount: 15,
+                itemCount: products
+                    .where((element) => element.category == widget.title)
+                    .toList()
+                    .length,
               ))
         ],
       ),
@@ -97,16 +144,20 @@ class _MenuSectionState extends State<MenuSection> {
 class MenuSectionContent extends StatelessWidget {
   final bool expanded;
   final double collapsedHeight;
-  final double expandedHeight;
+  late final double expandedHeight;
   final Widget child;
+  final int itemCount;
 
-  const MenuSectionContent({
-    Key? key,
-    required this.child,
-    this.collapsedHeight = 0.0,
-    this.expandedHeight = 400.0,
-    this.expanded = true,
-  }) : super(key: key);
+  MenuSectionContent(
+      {Key? key,
+      required this.child,
+      required this.itemCount,
+      this.collapsedHeight = 0.0,
+      this.expanded = true})
+      : super(key: key) {
+    expandedHeight =
+        min(expandedMaxHeight, itemCount * 50); //50 is the height of a MenuItem
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,11 +175,15 @@ class MenuSectionContent extends StatelessWidget {
 }
 
 class MenuItem extends StatelessWidget {
-  final int index;
+  final String name;
+  final double price;
+  final String category;
 
   const MenuItem({
     Key? key,
-    required this.index,
+    required this.name,
+    required this.price,
+    required this.category,
   }) : super(key: key);
 
   @override
@@ -138,14 +193,14 @@ class MenuItem extends StatelessWidget {
           border: Border.all(width: 1, color: accent1Color),
           color: accent2Color),
       child: ListTile(
-        title: Text(
-          "Cool $index",
-          style:
-              const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        leading: const Icon(
-          Icons.local_pizza,
-          color: Colors.white,
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(name),
+          Text(price.toString()),
+        ]),
+        leading: Icon(
+          sectionIcons[category],
+          color: mainColor,
         ),
       ),
     );
