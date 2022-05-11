@@ -70,26 +70,26 @@ class _FloorPlanState extends State<FloorPlan> {
                   // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
                   Container(
-                      child: Row(
-                    children: [
-                      const Text("Current floor: "),
-                      TextButton(
-                        onPressed: () {
-                          incrementFloor();
-                        },
-                        child: const Text("+",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        style: TextButton.styleFrom(primary: mainColor),
-                      ),
-                      Text(currentFloor.toString()),
-                      TextButton(
-                        onPressed: () {
-                          decrementFloor();
-                        },
-                        child: const Text("-",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        style: TextButton.styleFrom(primary: mainColor),
-                      ),
+                    child: Row(
+                      children: [
+                        const Text("Current floor: "),
+                        TextButton(
+                          onPressed: () {
+                            incrementFloor();
+                          },
+                          child: const Text("+",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          style: TextButton.styleFrom(primary: mainColor),
+                        ),
+                        Text(currentFloor.toString()),
+                        TextButton(
+                          onPressed: () {
+                            decrementFloor();
+                          },
+                          child: const Text("-",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          style: TextButton.styleFrom(primary: mainColor),
+                        ),
                     ],
                   )),
                   // ignore: avoid_unnecessary_containers
