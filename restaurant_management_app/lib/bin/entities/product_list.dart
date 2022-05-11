@@ -35,9 +35,9 @@ class ProductList{
   }
 
   ///Removes a product with a given name
-  static void removeTable(String productName){
+  static void removeProductByName(String productName){
     object ??= ProductList._();
-    object!._products.removeWhere((element) => element.name == productName);
+    object!._products.removeWhere((element) => element.name.toLowerCase() == productName.toLowerCase());
   }
 
 }

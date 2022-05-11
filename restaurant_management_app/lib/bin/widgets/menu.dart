@@ -1,28 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
 import 'package:restaurant_management_app/bin/services/product_service.dart';
+import 'package:restaurant_management_app/bin/widgets/custom_button.dart';
 import 'dart:math';
 
 import '../entities/product_list.dart';
 import '../models/product_model.dart';
 
 const double expandedMaxHeight = 400;
-
-List<String> sections = [
-  "Appetizers",
-  "Main courses",
-  "Sides",
-  "Soft drinks",
-  "Spirits"
-];
-
-Map sectionIcons = {
-  'Appetizers': Icons.apple,
-  'Main courses': Icons.food_bank,
-  'Sides': Icons.food_bank_outlined,
-  'Soft drinks': Icons.local_drink,
-  'Spirits': Icons.wine_bar
-};
 
 //menu window widget
 class Menu extends StatelessWidget {
@@ -52,8 +37,11 @@ class MenuSection extends StatefulWidget {
 }
 
 class _MenuSectionState extends State<MenuSection> {
-  bool expandFlag = false;
+  bool _expandFlag = false;
+  String _errorMessage = "";
   List<ProductModel> _products = [];
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController priceController  = TextEditingController();
 
   @override
   void initState() {
@@ -62,11 +50,18 @@ class _MenuSectionState extends State<MenuSection> {
   }
 
   @override
+  void dispose(){
+    nameController.dispose();
+    priceController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 1.0),
       child: Column(
-        children: <Widget>[
+        children: <Widget> [
           Container(
             // top bar containing title and expand button
             color: accent1Color,
@@ -74,33 +69,131 @@ class _MenuSectionState extends State<MenuSection> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(
-                    // expand button
-                    icon: Container(
-                      height: 50.0,
-                      width: 50.0,
-                      decoration: const BoxDecoration(
-                        color: mainColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          expandFlag
-                              ? Icons.keyboard_arrow_up
-                              : Icons.keyboard_arrow_down,
-                          color: Colors.white,
-                          size: 24,
+                Row(
+                  children: [
+                    IconButton(
+                      // expand button
+                      icon: Container(
+                        height: 50.0,
+                        width: 50.0,
+                        decoration: const BoxDecoration(
+                          color: mainColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            _expandFlag
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        expandFlag = !expandFlag;
-                      });
-                    }),
+                      onPressed: () {
+                        setState(() {
+                          _expandFlag = !_expandFlag;
+                        });
+                      }),
+                    IconButton(
+                      // expand button
+                      icon: Container(
+                        height: 50.0,
+                        width: 50.0,
+                        decoration: const BoxDecoration(
+                          color: mainColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Center(
+                          child: Icon(Icons.add,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+
+                        setState(() {
+                          _expandFlag = true;
+                        });
+
+                        await showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context){
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                              return AlertDialog(
+                                title: const Text("Add new item", style: TextStyle(color: mainColor),),
+                                content: 
+                                  SizedBox(
+                                    height: 200,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                      TextField(decoration: const InputDecoration(hintText: "Enter product name"), controller: nameController,),
+                                      TextField(decoration: const InputDecoration(hintText: "Enter price"), controller: priceController,),
+                                      Text(_errorMessage, style: const TextStyle(color: Colors.redAccent),),
+                                    ],),
+                                  ),
+                                
+                                actions: [
+                                  TextButton(child: const Text('Add'),
+                                  onPressed: () {
+
+                                    setState(() {
+                                      _errorMessage = "";
+                                    });
+
+                                    String name = nameController.text.trim();
+
+                                    if(name.length < 3){
+                                      setState(() {
+                                        _errorMessage = "Product name must have at least 3 characters!";
+                                      });
+                                      return;
+                                    }
+
+                                    if(name.length > 20){
+                                      setState(() {
+                                        _errorMessage = "Product name must have at most 20 characters!";
+                                      });
+                                      return;
+                                    }
+
+                                    for(var product in ProductList.getProductList()){
+                                      if(name.toLowerCase() == product.name.toLowerCase()){
+                                        setState(() {
+                                        _errorMessage = "Product name already exists!";
+                                      });
+                                      return;
+                                      }
+                                    }
+
+                                    double? price = double.tryParse(priceController.text);
+
+                                    if(price == null || price <= 0) {
+                                      setState(() {
+                                        _errorMessage = "Incorrect price! Must be a number higher than 0.";
+                                      });
+                                      return;
+                                    }
+
+                                    createProduct(name, price, widget.title);
+                                  }, style: TextButton.styleFrom(primary: mainColor),),
+                                  TextButton(child: const Text('Cancel'),
+                                  onPressed: () {Navigator.of(context).pop();}, style: TextButton.styleFrom(primary: mainColor),),
+                                ],
+                              );
+                              }
+                            );}
+                        );
+                      }),
+                  ],
+                ),
                 Text(
                   // Section title
-                  widget.title,
+                  widget.title.toUpperCase(),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, color: mainColor),
                 )
@@ -109,7 +202,7 @@ class _MenuSectionState extends State<MenuSection> {
           ),
           MenuSectionContent(
               // expanded content
-              expanded: expandFlag,
+              expanded: _expandFlag,
               itemCount: _products
                   .where((element) => element.category == widget.title)
                   .toList()
@@ -126,6 +219,7 @@ class _MenuSectionState extends State<MenuSection> {
                     price: items[index].price,
                     name: items[index].name,
                     category: widget.title,
+                    function: deleteProductByName,
                   );
                 },
                 itemCount: _products
@@ -136,6 +230,27 @@ class _MenuSectionState extends State<MenuSection> {
         ],
       ),
     );
+  }
+
+  void createProduct(String name, double price, String category){
+    ProductModel newProduct = ProductModel(name: name, price: price, category: category);
+    ProductList.addProduct(newProduct);
+    
+    setState(() {
+      _products = ProductList.getProductList();
+    });
+
+    saveProducts();
+  }
+
+  void deleteProductByName(String name){
+    ProductList.removeProductByName(name);
+
+    setState(() {
+      _products = ProductList.getProductList();
+    });
+    
+    saveProducts();
   }
 }
 
@@ -179,12 +294,14 @@ class MenuItem extends StatelessWidget {
   final String name;
   final double price;
   final String category;
+  final void Function(String) function;
 
   const MenuItem({
     Key? key,
     required this.name,
     required this.price,
     required this.category,
+    required this.function,
   }) : super(key: key);
 
   @override
@@ -195,9 +312,16 @@ class MenuItem extends StatelessWidget {
           color: accent2Color),
       child: ListTile(
         title:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(name),
-          Text(price.toString()),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(name),
+            Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                  child: Text(price.toString())),
+                CustomButton(color: Colors.red, function: () {function(name);}, size: 25, icon: const Icon(Icons.delete)),
+              ],
+            ),
         ]),
         leading: Icon(
           sectionIcons[category],
