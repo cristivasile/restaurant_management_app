@@ -1,6 +1,5 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:restaurant_management_app/bin/data_providers/data_provider.dart';
 import 'package:restaurant_management_app/main.dart';
 import '../entities/table_list.dart';
 import '../models/table_model.dart' as table_model;
@@ -49,11 +48,10 @@ List<table_model.TableModel> getTablesFromTableWidgets(
   return tables;
 }
 
-/// Loads a list of tables, saves it to TableList and returns it
+/// Loads a list of tables and returns it
 ///
 Future<List<TableModel>> loadTables() async {
-  DataProvider provider = JsonProvider();
-  List<TableModel> tables = await provider.readTables();
+  List<TableModel> tables = await data.readTables();
   return tables;
 }
 

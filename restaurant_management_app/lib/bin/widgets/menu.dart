@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'package:restaurant_management_app/bin/services/product_service.dart';
 import 'dart:math';
 
+import '../entities/product_list.dart';
 import '../models/product_model.dart';
 
 const double expandedMaxHeight = 400;
@@ -21,21 +23,6 @@ Map sectionIcons = {
   'Soft drinks': Icons.local_drink,
   'Spirits': Icons.wine_bar
 };
-
-//TODO - delete hardcoded list
-List<ProductModel> products = [
-  ProductModel(category: "Appetizers", price: 103.5, name: "Appetizer #1"),
-  ProductModel(name: "Whiskey", price: 235, category: "Spirits"),
-  ProductModel(name: "Vodka", price: 214, category: "Spirits"),
-  ProductModel(name: "Red meat", price: 143, category: "Main courses"),
-  ProductModel(name: "Irish schnitzel", price: 72, category: "Main courses"),
-  ProductModel(name: "Coca cola", price: 30, category: "Soft drinks"),
-  ProductModel(name: "Sprite", price: 32, category: "Soft drinks"),
-  ProductModel(name: "Fanta", price: 28.54, category: "Soft drinks"),
-  ProductModel(name: "French fries", price: 27, category: "Sides"),
-  ProductModel(name: "Drunk fish", price: 929, category: "Main courses"),
-  ProductModel(name: "Soup", price: 510, category: "Main courses"),
-];
 
 //menu window widget
 class Menu extends StatelessWidget {
@@ -66,6 +53,13 @@ class MenuSection extends StatefulWidget {
 
 class _MenuSectionState extends State<MenuSection> {
   bool expandFlag = false;
+  List<ProductModel> _products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _products = ProductList.getProductList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,14 +110,14 @@ class _MenuSectionState extends State<MenuSection> {
           MenuSectionContent(
               // expanded content
               expanded: expandFlag,
-              itemCount: products
+              itemCount: _products
                   .where((element) => element.category == widget.title)
                   .toList()
                   .length,
               child: ListView.builder(
                 controller: ScrollController(),
                 itemBuilder: (BuildContext context, int index) {
-                  List<ProductModel> items = products
+                  List<ProductModel> items = _products
                       .where((element) => element.category == widget.title)
                       .toList();
 
@@ -134,7 +128,7 @@ class _MenuSectionState extends State<MenuSection> {
                     category: widget.title,
                   );
                 },
-                itemCount: products
+                itemCount: _products
                     .where((element) => element.category == widget.title)
                     .toList()
                     .length,

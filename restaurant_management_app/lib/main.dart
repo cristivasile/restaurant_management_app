@@ -1,13 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'package:restaurant_management_app/bin/entities/product_list.dart';
 import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
 
 import 'bin/data_providers/data_provider.dart';
 import 'bin/widgets/menu.dart';
 
 DataProvider data = JsonProvider();
+
+Future<void> init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ProductList.loadProductList();
+}
+
 void main() {
+  init();
   runApp(const MyApp());
 }
 
