@@ -6,41 +6,11 @@ import 'package:restaurant_management_app/bin/constants.dart';
 
 import '../constants.dart';
 import '../models/order_model.dart';
+import '../entities/order_list.dart';
 
 const double expandedMaxHeight = 400;
 
-// PLACEHOLDER ORDERS
-
-List<ProductModel> _products1 = [
-  ProductModel(category: 'Main courses', name: "Babaroles", price: 20),
-  ProductModel(category: 'Spirits', name: "gin", price: 30),
-  ProductModel(category: 'Spirits', name: "tequila", price: 40)
-];
-
-List<ProductModel> _products2 = [
-  ProductModel(category: 'Spirits', name: "Vodka", price: 20),
-  ProductModel(category: 'Spirits', name: "Gin", price: 30),
-  ProductModel(category: 'Spirits', name: "Tequila", price: 40)
-];
-
-List<ProductModel> _products3 = [
-  ProductModel(category: 'Spirits', name: "vodkA", price: 20),
-  ProductModel(category: 'Spirits', name: "giN", price: 30),
-  ProductModel(category: 'Spirits', name: "tequilA", price: 40)
-];
-
-Map _map1 = {_products1[0]: 3, _products1[1]: 2, _products1[2]: 1};
-Map _map2 = {_products2[0]: 2, _products2[1]: 2, _products2[2]: 3};
-Map _map3 = {_products3[0]: 1, _products3[1]: 2, _products3[2]: 3};
-
-List<String> tableIds = ['A1', 'D3', 'B2'];
-
-List<OrderModel> orders = [
-  OrderModel(products: _products1, quantities: _map1, tableId: tableIds[0]),
-  OrderModel(products: _products2, quantities: _map2, tableId: tableIds[1]),
-  OrderModel(products: _products3, quantities: _map3, tableId: tableIds[2]),
-];
-////////////
+List<OrderModel> orders = OrderList.getOrderList();
 
 class OrdersWidget extends StatefulWidget {
   const OrdersWidget({Key? key}) : super(key: key);
@@ -56,7 +26,9 @@ class _OrdersWidgetState extends State<OrdersWidget> {
         controller: ScrollController(),
         itemBuilder: (BuildContext context, int index) {
           return OrderSection(
-            title: orders[index].tableId + '     ' + orders[index].price.toString(),
+            title: orders[index].tableId +
+                '     ' +
+                orders[index].price.toString(),
             orderModel: orders[index],
           );
         },
@@ -122,7 +94,8 @@ class _OrderSectionState extends State<OrderSection> {
                   widget.title,
                   style: const TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.bold, color: mainColor),
+                      fontWeight: FontWeight.bold,
+                      color: mainColor),
                 )
               ],
             ),
@@ -139,7 +112,7 @@ class _OrderSectionState extends State<OrderSection> {
                   return OrderItem(
                     price: items[index].price,
                     name: items[index].name,
-                    quantity: widget.orderModel.quantities[items[index]],
+                    quantity: widget.orderModel.quantities[index],
                     category: items[index].category,
                   );
                 },
