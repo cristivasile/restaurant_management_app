@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/models/product_model.dart';
+import 'package:restaurant_management_app/bin/constants.dart';
 
 import '../constants.dart';
 import '../models/order_model.dart';
@@ -11,7 +12,7 @@ const double expandedMaxHeight = 400;
 // PLACEHOLDER ORDERS
 
 List<ProductModel> _products1 = [
-  ProductModel(category: 'Spirits', name: "vodka", price: 20),
+  ProductModel(category: 'Main courses', name: "Babaroles", price: 20),
   ProductModel(category: 'Spirits', name: "gin", price: 30),
   ProductModel(category: 'Spirits', name: "tequila", price: 40)
 ];
@@ -214,8 +215,8 @@ class OrderItem extends StatelessWidget {
           Text(name + ' X' + quantity.toString()),
           Text(totalPrice.toString()),
         ]),
-        leading: const Icon(
-          Icons.local_pizza_outlined,
+        leading: Icon(
+          sectionIcons[category],
           color: mainColor,
         ),
       ),
