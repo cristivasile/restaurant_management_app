@@ -17,6 +17,16 @@ class ProductModel implements Comparable<dynamic> {
   }
 
   @override
+  String toString() {
+    String rep = "{\n";
+    rep += '"name": "$name",\n';
+    rep += '"price": $price,\n';
+    rep += '"category": "$category"\n';
+    rep += "}";
+    return rep;
+  }
+
+  @override
   int compareTo(other) {
     return name.compareTo(other.name);
   }

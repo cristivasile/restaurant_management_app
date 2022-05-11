@@ -6,7 +6,7 @@ import 'package:restaurant_management_app/bin/models/table_model.dart';
 
 // interface for data storage
 // dart does not have interfaces so this is a workaround
-abstract class DataProvider{
+abstract class DataProvider {
   Future<List<TableModel>> readTables();
   Future<void> writeTables(List<TableModel> tableList);
   Future<List<ProductModel>> readProducts();
@@ -14,7 +14,7 @@ abstract class DataProvider{
 }
 
 // reads and writes to a JSON file
-class JsonProvider implements DataProvider{
+class JsonProvider implements DataProvider {
   static const jsonPath = "assets/temp_json/";
   static const tableFile = "tables.json";
   static const productFile = "products.json";
@@ -33,12 +33,12 @@ class JsonProvider implements DataProvider{
 
   @override
   Future<void> writeTables(List<TableModel> tableList) async {
-    await File(tablePath).writeAsString(json.encode(tableList));
+    String tableString = "[" + tableList.join(",\n") + "]";
+    await File(tablePath).writeAsString(tableString);
   }
 
   @override
   Future<List<ProductModel>> readProducts() async {
-    
     final jsondata = await services.rootBundle.loadString(productPath);
     final data = json.decode(jsondata) as List<dynamic>;
     return data.map((x) => ProductModel.fromJson(x)).toList();
@@ -46,10 +46,7 @@ class JsonProvider implements DataProvider{
 
   @override
   Future<void> writeProducts(List<ProductModel> productList) async {
-    await File(productPath).writeAsString(json.encode(productList));
+    String productString = "[" + productList.join(",\n") + "]";
+    await File(productPath).writeAsString(productString);
   }
-
 }
-
-
-

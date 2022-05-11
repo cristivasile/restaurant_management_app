@@ -28,4 +28,16 @@ class TableModel {
       'floor': floor
     };
   }
+
+  @override
+  String toString() {
+    String rep = "{\n";
+    rep += '"id": "$id",\n';
+    rep += '"xOffset": $xOffset,\n';
+    rep += '"yOffset": $yOffset,\n';
+    rep += '"tableSize": $tableSize,\n';
+    rep += '"floor": $floor\n';
+    rep += "}";
+    return rep;
+  }
 }
