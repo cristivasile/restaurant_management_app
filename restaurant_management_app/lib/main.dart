@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'package:restaurant_management_app/bin/entities/order_list.dart';
 import 'package:restaurant_management_app/bin/entities/product_list.dart';
 import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
+import 'package:restaurant_management_app/bin/widgets/orders.dart';
 
 import 'bin/data_providers/data_provider.dart';
 import 'bin/widgets/menu.dart';
@@ -12,6 +14,7 @@ DataProvider data = JsonProvider();
 Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ProductList.loadProductList();
+  await OrderList.loadOrderList();
 }
 
 void main() {
@@ -54,7 +57,7 @@ class MyApp extends StatelessWidget {
               Center(child: FloorPlan(key: UniqueKey())),
               const Center(child: Text("Not implemented")),
               const Center(child: Menu()),
-              const Center(child: Text("Not implemented")),
+              const Center(child: OrdersWidget()),
             ],
           ),
         ),
