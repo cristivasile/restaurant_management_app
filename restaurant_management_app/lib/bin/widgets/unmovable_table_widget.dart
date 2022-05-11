@@ -2,12 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart' as constants;
 
-import '../entities/table_list.dart';
-
 /// Movable table object
 ///
-class MovableTableWidget extends StatefulWidget {
-  final BoxConstraints constraints; //widget constraints received as parameter
+class UnmovableTableWidget extends StatefulWidget {
   final String imagePath; //the corresponding table's image path
   final int _imageWidth; // width of the displayed image
   final int imageHeight; // height of the displayed image
@@ -16,29 +13,34 @@ class MovableTableWidget extends StatefulWidget {
   final int floor;
   final Offset
       position; // position relative to the top left corner of the container
-  MovableTableWidget({
+  final void Function() callback;
+  UnmovableTableWidget({
     Key? key,
-    required this.constraints,
     required this.tableSize,
     required this.position,
     required this.id,
     required this.floor,
+    required this.callback,
   })  : imagePath = getImagePath(tableSize),
         _imageWidth = getImageSize(tableSize)[0],
         imageHeight = getImageSize(tableSize)[1],
         super(key: key);
 
   @override
-  State<MovableTableWidget> createState() => _MovableTableWidgetState();
+  State<UnmovableTableWidget> createState() => _UnmovableTableWidgetState();
 }
 
-class _MovableTableWidgetState extends State<MovableTableWidget> {
+class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
+  static String selectedId = "";
   late Offset _position;
+  late AssetImage _image = AssetImage("");
+  // late UnmovableTableWidget? lastWidget = null;
 
   @override
   void initState() {
     super.initState();
     _position = widget.position;
+    _image = AssetImage(widget.imagePath + ".png");
   }
 
   @override
@@ -46,67 +48,55 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
     return Positioned(
       left: _position.dx,
       top: _position.dy,
-      child: cli (
-        // image displayed under the mouse while dragging
-        // image displayed normally
+      child: SizedBox(
+        width: widget._imageWidth.toDouble(),
+        height: widget.imageHeight.toDouble(),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
             Image(
-              image: AssetImage(widget.imagePath + ".png"),
+              image: (widget.id == selectedId)
+                  ? AssetImage(
+                      widget.imagePath + constants.feedbackPath + ".png")
+                  : AssetImage(widget.imagePath + ".png"),
               width: widget._imageWidth.toDouble(),
               height: widget.imageHeight.toDouble(),
             ),
             Text(
               widget.id,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color:
+                      (widget.id == selectedId) ? Colors.black : Colors.white,
+                  fontWeight: FontWeight.bold),
             ),
+            GestureDetector(onTap: () {
+              setState(() {
+                if (selectedId == "") {
+                  selectedId = widget.id;
+                } else if (selectedId == widget.id) {
+                  selectedId = "";
+                } else {
+                  selectedId = widget.id;
+                }
+                widget.callback();
+              });
+            }),
           ],
         ),
-        //image displayed at the table position while moving it
-        childWhenDragging: Image(
-            image:
-                AssetImage(widget.imagePath + constants.feedbackPath + ".png"),
-            width: widget._imageWidth.toDouble(),
-            height: widget.imageHeight.toDouble()),
-        onDragEnd: (DraggableDetails details) {
-          setState(() {
-            final adjustmenty = MediaQuery.of(context).size.height -
-                widget.constraints.maxHeight -
-                constants.floorMargin;
-            final adjustmentx = MediaQuery.of(context).size.width -
-                widget.constraints.maxWidth -
-                constants.floorMargin;
-            // details.offset is relative to the window instead of the container
-            // => without this the item would be placed too low because of the app bar
-            // + margin of the container
-
-            //check if the position is inside the container: right, left, top, bottom
-            if (details.offset.dx + widget._imageWidth <
-                    MediaQuery.of(context).size.width &&
-                details.offset.dx > 0 + adjustmentx &&
-                details.offset.dy > 0 + adjustmenty &&
-                details.offset.dy + widget.imageHeight + constants.floorMargin <
-                    MediaQuery.of(context).size.height) {
-              double xOffset = details.offset.dx - adjustmentx;
-              double yOffset = details.offset.dy - adjustmenty;
-
-              _position = Offset(xOffset, yOffset);
-
-              TableList.editTablePosition(widget.id, xOffset, yOffset);
-            }
-          });
-        },
       ),
     );
   }
 }
 
-/// Receives a table size and returns the path to the corresponding image
-///
-/// @param tableSize: size of the table
-/// @note image paths are without extension
+// GestureDetector(
+//   onTap: () => setState(() {
+//     Image(
+//         image: AssetImage(widget.imagePath + ".png"),
+//         width: widget._imageWidth.toDouble(),
+//         height: widget.imageHeight.toDouble());
+//   }),
+// ),
+
 String getImagePath(int tableSize) {
   switch (tableSize) {
     case 2:

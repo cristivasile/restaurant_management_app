@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
 import 'package:restaurant_management_app/bin/entities/table_list.dart';
 import 'package:restaurant_management_app/bin/models/table_model.dart';
-import 'package:restaurant_management_app/bin/services/table_service.dart';
-import 'package:restaurant_management_app/bin/widgets/table_widget.dart';
+import 'package:restaurant_management_app/bin/services/unmovable_table_service.dart';
+import 'package:restaurant_management_app/bin/widgets/unmovable_table_widget.dart';
 
 import 'custom_button.dart';
 
@@ -21,7 +21,7 @@ const double buttonSize = 45;
 
 class _ReservationState extends State<Reservation> {
   int currentFloor = 0;
-  List<MovableTableWidget> _tableWidgets = [];
+  List<UnmovableTableWidget> _tableWidgets = [];
   List<TableModel> _tableModelList =
       []; //required for the first initialization of _tableWidgets
   List<String> _tableIds = ['none'];
@@ -48,9 +48,25 @@ class _ReservationState extends State<Reservation> {
     });
   }
 
+  void reloadTables() {
+    setState(() {
+      _tableWidgets = _tableWidgets;
+    });
+  }
+
+  void rebuildAllChildren(BuildContext context) {
+    void rebuild(Element el) {
+      el.markNeedsBuild();
+      el.visitChildren(rebuild);
+    }
+
+    (context as Element).visitChildren(rebuild);
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
+      rebuildAllChildren(context);
       return Container(
         // for background color
         color: accent1Color,
@@ -88,92 +104,6 @@ class _ReservationState extends State<Reservation> {
                       ),
                     ],
                   )),
-                  // // ignore: avoid_unnecessary_containers
-                  // Container(
-                  //   // Container is necessary for grouping
-                  //   // add table group
-                  //   child: Row(
-                  //     children: [
-                  //       Container(
-                  //         margin: const EdgeInsets.symmetric(horizontal: 10),
-                  //         child: DropdownButton<String>(
-                  //           //table size selector
-                  //           value: _addDropdownValue,
-                  //           icon: const Icon(Icons.arrow_downward),
-                  //           elevation: 16,
-                  //           style: const TextStyle(color: Colors.black),
-                  //           underline: Container(
-                  //             height: 2,
-                  //             color: mainColor,
-                  //           ),
-                  //           onChanged: (String? newValue) {
-                  //             setState(() {
-                  //               _addDropdownValue = newValue!;
-                  //             });
-                  //           },
-                  //           items: <String>['2', '3', '4', '6', '8']
-                  //               .map<DropdownMenuItem<String>>((String value) {
-                  //             return DropdownMenuItem<String>(
-                  //               value: value,
-                  //               child: Text(value),
-                  //             );
-                  //           }).toList(),
-                  //         ),
-                  //       ),
-                  //       // //add table button
-                  //       // CustomButton(
-                  //       //   size: buttonSize,
-                  //       //   icon: const Icon(Icons.add),
-                  //       //   color: mainColor,
-                  //       //   function: () => {addTable()},
-                  //       // ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Container is necessary for grouping
-                  // ignore: avoid_unnecessary_containers
-                  // Container(
-                  //   child: Row(
-                  //     // delete table group
-                  //     children: [
-                  //       Container(
-                  //         margin: const EdgeInsets.symmetric(horizontal: 10),
-                  //         child: DropdownButton<String>(
-                  //           //table size selector
-                  //           value: _removeDropdownValue,
-                  //           icon: const Icon(Icons.arrow_downward),
-                  //           elevation: 16,
-                  //           style: const TextStyle(color: Colors.black),
-                  //           underline: Container(
-                  //             height: 2,
-                  //             color: mainColor,
-                  //           ),
-                  //           onChanged: (String? newValue) {
-                  //             setState(() {
-                  //               _removeDropdownValue = newValue!;
-                  //             });
-                  //           },
-                  //           items: _tableIds
-                  //               .map<DropdownMenuItem<String>>((String value) {
-                  //             return DropdownMenuItem<String>(
-                  //               value: value,
-                  //               child: Text(value),
-                  //             );
-                  //           }).toList(),
-                  //         ),
-                  //       ),
-                  //       // //delete table button
-                  //       // CustomButton(
-                  //       //   size: buttonSize,
-                  //       //   icon: const Icon(Icons.delete),
-                  //       //   color: mainColor,
-                  //       //   function: () => {deleteTable()},
-                  //       // ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Container is necessary for grouping
-                  // ignore: avoid_unnecessary_containers
                   Container(
                     child: Row(
                       // save changes group
@@ -211,14 +141,14 @@ class _ReservationState extends State<Reservation> {
                     // load tables from TableList
                     _firstBuild = false;
                     _tableWidgets =
-                        getWidgetsFromTables(_tableModelList, childConstraints);
+                        getWidgetsFromTables(_tableModelList, reloadTables);
                   }
 
                   return Stack(
-                    children: _tableWidgets
-                        .where((element) => element.floor == currentFloor)
-                        .toList(), //filter only tables on the current floor
-                  );
+                      children: _tableWidgets
+                          .where((element) => element.floor == currentFloor)
+                          .toList() //filter only tables on the current floor
+                      );
                 }),
               ),
             ),
@@ -227,39 +157,6 @@ class _ReservationState extends State<Reservation> {
       );
     });
   }
-
-  // void addTable() {
-  //   UniqueKey key = UniqueKey();
-  //   MovableTableWidget newTableWidget = MovableTableWidget(
-  //     key:
-  //         key, //tables must have a key, otherwise states can jump over to another object
-  //     constraints: _tablesBoxConstraints,
-  //     tableSize: int.parse(_addDropdownValue),
-  //     position: Offset.zero,
-  //     floor: currentFloor,
-  //     id: generateTableId(
-  //         tableSize: int.parse(_addDropdownValue), tableWidgets: _tableWidgets),
-  //   );
-
-  // void deleteTable() async {
-  //   final String id = _removeDropdownValue;
-  //   if (id != 'none') {
-  //     //check that a table is selected
-  //     TableList.removeTable(id);
-
-  //     setState(() {
-  //       _tableWidgets.removeWhere((element) => element.id == id);
-  //       _tableIds.removeWhere((element) => element == id);
-
-  //       if (_tableIds.isEmpty) {
-  //         //check if list is empty because it will cause an exception
-  //         _tableIds.add('none');
-  //       }
-
-  //       _removeDropdownValue = _tableIds[0];
-  //     });
-  //   }
-  // }
 
   void incrementFloor() async {
     if (currentFloor < 10) {
