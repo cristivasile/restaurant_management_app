@@ -3,8 +3,11 @@ class ProductModel implements Comparable<dynamic> {
   late double price;
   late String category;
 
-  ProductModel(
-      {required this.name, required this.price, required this.category});
+  ProductModel({
+    required this.name,
+    required this.price,
+    required this.category
+  });
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -13,7 +16,11 @@ class ProductModel implements Comparable<dynamic> {
   }
 
   Map<String, dynamic> toJson() {
-    return {'name': name, 'price': price, 'category': category};
+    return {
+      'name': name,
+      'price': price,
+      'category': category
+    };
   }
 
   @override

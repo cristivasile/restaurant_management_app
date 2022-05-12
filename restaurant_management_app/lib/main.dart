@@ -31,24 +31,39 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             bottom: const TabBar(
-              tabs: [
+              tabs: <Widget>[
                 Tab(
                   icon: Icon(Icons.create_outlined), 
-                  text: "Edit floor plan"),
-                Tab(
-                    icon: Icon(Icons.remove_red_eye_outlined),
-                    text: "View tables and reservations"),
-                Tab(
-                  icon: Icon(Icons.menu_book_outlined),
-                  text: "Edit menu",
+                  text: "Edit floor plan"
                 ),
                 Tab(
-                    icon: Icon(Icons.view_list_outlined),
-                    text: "View order list"),
+                  icon: Icon(Icons.bookmark_added_outlined),
+                  text: "Manage reservations"
+                ),
+                Tab(
+                  icon: Icon(Icons.menu_book_outlined),
+                  text: "Edit menu"
+                ),
+                Tab(
+                  icon: Icon(Icons.view_list_outlined),
+                  text: "View order list"
+                ),
               ],
+              indicatorColor: accent2Color,
+              indicatorWeight: 3,
+              labelColor: accent2Color,
+              unselectedLabelColor: accent1Color,
             ),
-            title: const Text('Floor plan editor'),
-            backgroundColor: mainColor,
+            centerTitle: true,
+            title: const Text(
+              'RESTAURANT MANAGER',
+              style: TextStyle(
+                fontSize: 24,
+                color: accent2Color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            backgroundColor: mainColor
           ),
           body: TabBarView(
             physics: const BouncingScrollPhysics(),

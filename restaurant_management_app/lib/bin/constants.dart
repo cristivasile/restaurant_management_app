@@ -1,6 +1,4 @@
 // table images paths. WARNING they do not include extensions = .png
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 const twoTablePath = "assets/2Table";

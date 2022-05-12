@@ -1,9 +1,4 @@
 [{
-"name": "Appetizer #1",
-"price": 103.5,
-"category": "Appetizers"
-},
-{
 "name": "Whiskey",
 "price": 235.0,
 "category": "Spirits"
@@ -66,11 +61,6 @@
 {
 "name": "Anchovies",
 "price": 135.0,
-"category": "Main courses"
-},
-{
-"name": "Babaroles",
-"price": 234.15,
 "category": "Main courses"
 },
 {

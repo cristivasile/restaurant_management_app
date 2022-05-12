@@ -1,56 +1,56 @@
 [{
 "id": "A1",
-"xOffset": 584.9999999999998,
-"yOffset": 183.79999999999995,
+"xOffset": 1025.799999999997,
+"yOffset": 298.2000000000066,
 "tableSize": 2,
 "floor": 0
 },
 {
 "id": "A2",
-"xOffset": 733.4000000000003,
-"yOffset": 184.8000000000004,
+"xOffset": 71.00000000000267,
+"yOffset": 283.5999999999995,
 "tableSize": 2,
 "floor": 0
 },
 {
 "id": "D1",
-"xOffset": 1008.2000000000006,
-"yOffset": 242.99999999999994,
+"xOffset": 113.80000000000237,
+"yOffset": 120.59999999999746,
 "tableSize": 6,
 "floor": 0
 },
 {
 "id": "D2",
-"xOffset": 334.50000000000114,
-"yOffset": 102.89999999999986,
+"xOffset": 559.3000000000071,
+"yOffset": 89.29999999999791,
 "tableSize": 6,
 "floor": 0
 },
 {
 "id": "D3",
-"xOffset": 1012.7999999999997,
-"yOffset": 63.00000000000074,
+"xOffset": 940.800000000003,
+"yOffset": 133.0000000000049,
 "tableSize": 6,
 "floor": 0
 },
 {
 "id": "E2",
-"xOffset": 622.2,
-"yOffset": 71.40000000000066,
+"xOffset": 557.4000000000016,
+"yOffset": 286.5999999999983,
 "tableSize": 8,
 "floor": 0
 },
 {
 "id": "A3",
-"xOffset": 255.0,
-"yOffset": 275.4,
+"xOffset": 904.6000000000015,
+"yOffset": 301.0000000000049,
 "tableSize": 2,
 "floor": 0
 },
 {
 "id": "A4",
-"xOffset": 91.0,
-"yOffset": 269.0,
+"xOffset": 200.60000000000042,
+"yOffset": 284.20000000000033,
 "tableSize": 2,
 "floor": 0
 }]

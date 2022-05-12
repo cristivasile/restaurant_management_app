@@ -33,7 +33,7 @@ class JsonProvider implements DataProvider {
 
   @override
   Future<void> writeTables(List<TableModel> tableList) async {
-    String tableString = "[" + tableList.join(",\n") + "]";
+    String tableString = "[${tableList.join(",\n")}]";
     await File(tablePath).writeAsString(tableString);
   }
 
@@ -46,7 +46,7 @@ class JsonProvider implements DataProvider {
 
   @override
   Future<void> writeProducts(List<ProductModel> productList) async {
-    String productString = "[" + productList.join(",\n") + "]";
+    String productString = "[${productList.join(",\n")}]";
     await File(productPath).writeAsString(productString);
   }
 }

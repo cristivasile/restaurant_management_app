@@ -4,12 +4,13 @@ class TableModel {
   late int tableSize;
   late int floor;
 
-  TableModel(
-      {required this.id,
-      required this.xOffset,
-      required this.yOffset,
-      required this.tableSize,
-      required this.floor});
+  TableModel({
+    required this.id,
+    required this.xOffset,
+    required this.yOffset,
+    required this.tableSize,
+    required this.floor
+  });
 
   TableModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
