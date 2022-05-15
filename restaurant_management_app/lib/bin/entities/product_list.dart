@@ -40,4 +40,8 @@ class ProductList{
     object!._products.removeWhere((element) => element.name.toLowerCase() == productName.toLowerCase());
   }
 
+  static ProductModel getProductByName(String productName) {
+    object ??= ProductList._();
+    return object!._products.firstWhere((element) => element.name.toLowerCase() == productName.toLowerCase());
+  }
 }

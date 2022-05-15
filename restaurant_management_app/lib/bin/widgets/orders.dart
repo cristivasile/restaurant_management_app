@@ -24,19 +24,20 @@ class OrdersWidget extends StatefulWidget {
 class _OrdersWidgetState extends State<OrdersWidget> {
   List<ProductModel> _products = [];
   String _dialogErrorMessage = "";
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
+  String _currentSelectedProduct = '';
+  List<ProductModel> _dialogProducts = [];
+  final TextEditingController _quantityController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _products = ProductList.getProductList();
+    _currentSelectedProduct = _products[0].name;
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    priceController.dispose();
+    _quantityController.dispose();
     super.dispose();
   }
 
@@ -83,7 +84,8 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                 style: TextStyle(color: mainColor),
                               ),
                               content: SizedBox(
-                                height: 200,
+                                height: 300,
+                                width: 300,
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
@@ -91,16 +93,65 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                     ////
                                     /// TODO - THIS SHOULD BE A DROPDOWN, FOLLOWED BY A BUTTON TO ADD THE PRODUCT TO THE ORDER'S LIST
                                     /// CHECK DROPDOWN EXAMPLE IN FLOORPLAN.DART
-                                    TextField(
-                                      decoration: const InputDecoration(
-                                          hintText: "Enter product name"),
-                                      controller: nameController,
+                                    Column(
+                                      children: [
+                                        const Text(
+                                          "Choose Products",
+                                          style: TextStyle(color: Colors.black87),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              margin: const EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              child: DropdownButton<String>(
+                                                //table size selector
+                                                value: _currentSelectedProduct,
+                                                icon: const Icon(
+                                                    Icons.arrow_downward),
+                                                elevation: 16,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                                underline: Container(
+                                                  height: 2,
+                                                  color: mainColor,
+                                                ),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    _currentSelectedProduct =
+                                                        newValue!;
+                                                  });
+                                                },
+                                                items: _products
+                                                    .map<DropdownMenuItem<String>>(
+                                                        (ProductModel value) {
+                                                  return DropdownMenuItem<String>(
+                                                    value: value.name,
+                                                    child: Text(value.name),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                addProductToDialogList();
+                                              },
+                                              child: const Text("Add",
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold)),
+                                              style: TextButton.styleFrom(
+                                                  primary: mainColor),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
+
                                     /// TODO - BUTTON HERE
                                     TextField(
                                       decoration: const InputDecoration(
                                           hintText: "Enter quantity"),
-                                      controller: priceController,
+                                      controller: _quantityController,
                                     ),
                                     Text(
                                       _dialogErrorMessage,
@@ -118,49 +169,23 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                       _dialogErrorMessage = "";
                                     });
 
-                                    String name = nameController.text.trim();
+                                    int? quantity =
+                                        int.tryParse(_quantityController.text);
 
-                                    if (name.length < 3) {
+                                    if (quantity == null || quantity <= 0) {
                                       setState(() {
                                         _dialogErrorMessage =
-                                            "Product name must have at least 3 characters!";
-                                      });
-                                      return;
-                                    }
-
-                                    if (name.length > 20) {
-                                      setState(() {
-                                        _dialogErrorMessage =
-                                            "Product name must have at most 20 characters!";
-                                      });
-                                      return;
-                                    }
-
-                                    for (var product
-                                        in ProductList.getProductList()) {
-                                      if (name.toLowerCase() ==
-                                          product.name.toLowerCase()) {
-                                        setState(() {
-                                          _dialogErrorMessage =
-                                              "Product name already exists!";
-                                        });
-                                        return;
-                                      }
-                                    }
-
-                                    double? price =
-                                        double.tryParse(priceController.text);
-
-                                    if (price == null || price <= 0) {
-                                      setState(() {
-                                        _dialogErrorMessage =
-                                            "Incorrect price! Must be a number higher than 0.";
+                                            "Incorrect quantity! Must be a number higher than 0.";
                                       });
                                       return;
                                     }
 
                                     /// TODO - ADD PRODUCT TO ORDER LIST
-                                    /// CREATE ORDER
+                                    ///
+                                    ///
+                                    /// TODO - CREATE ORDER AT THE END HERE
+                                    
+                                    
                                   },
                                   style:
                                       TextButton.styleFrom(primary: mainColor),
@@ -184,14 +209,30 @@ class _OrdersWidgetState extends State<OrdersWidget> {
       },
     );
   }
+
+  void addProductToDialogList() async {
+    setState(() {
+      _dialogErrorMessage = "";
+    });
+
+    int? quantity = int.tryParse(_quantityController.text);
+
+    if (quantity == null || quantity <= 0) {
+      setState(() {
+        _dialogErrorMessage =
+            "Incorrect quantity! Must be a number higher than 0.";
+      });
+      return;
+    }
+
+    ProductModel product =
+        ProductList.getProductByName(_currentSelectedProduct);
+
+    setState(() {
+      _dialogProducts.add(product);
+    });
+  }
 }
-//               ]),
-//             ),
-//           ],
-//         );
-//     );
-//   }
-// }
 
 //Order section/category widget
 class OrderSection extends StatefulWidget {
