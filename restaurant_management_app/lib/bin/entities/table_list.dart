@@ -16,6 +16,11 @@ class TableList {
     return object!._tables;
   }
 
+  static List<TableModel> getTableListNonAsync() {
+    return object!._tables;
+  }
+
+
   static void setTableList(List<TableModel> newTables){
     object ??= TableList._();
     object!._tables = newTables;

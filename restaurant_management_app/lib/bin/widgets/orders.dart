@@ -3,12 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/models/product_model.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'package:restaurant_management_app/bin/services/order_service.dart';
 import 'package:restaurant_management_app/bin/widgets/custom_button.dart';
 
 import '../constants.dart';
 import '../entities/product_list.dart';
+import '../entities/table_list.dart';
 import '../models/order_model.dart';
 import '../entities/order_list.dart';
+import '../models/table_model.dart';
 
 const double expandedMaxHeight = 400;
 
@@ -23,8 +26,12 @@ class OrdersWidget extends StatefulWidget {
 
 class _OrdersWidgetState extends State<OrdersWidget> {
   List<ProductModel> _products = [];
-  String _dialogErrorMessage = "";
+  List<TableModel> _tables = [];
+
+  String _dialogErrorMessage = '';
   String _currentSelectedProduct = '';
+  String _currentSelectedTable = '';
+
   List<ProductModel> _dialogProducts = [];
   List<int> _dialogProductQuantities = [];
   final TextEditingController _quantityController = TextEditingController();
@@ -33,7 +40,9 @@ class _OrdersWidgetState extends State<OrdersWidget> {
   void initState() {
     super.initState();
     _products = ProductList.getProductList();
+    _tables = TableList.getTableListNonAsync();
     _currentSelectedProduct = _products[0].name;
+    _currentSelectedTable = _tables[0].id;
   }
 
   @override
@@ -72,7 +81,6 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                   size: 50,
                   icon: const Icon(Icons.add),
                   function: () async {
-                    
                     _dialogProducts = [];
                     _dialogProductQuantities = [];
                     await showDialog(
@@ -107,7 +115,39 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 10),
                                               child: DropdownButton<String>(
-                                                //table size selector
+                                                value: _currentSelectedTable,
+                                                icon: const Icon(
+                                                    Icons.arrow_downward),
+                                                elevation: 16,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                                underline: Container(
+                                                  height: 2,
+                                                  color: mainColor,
+                                                ),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    _currentSelectedTable =
+                                                        newValue!;
+                                                  });
+                                                },
+                                                items: _tables.map<
+                                                        DropdownMenuItem<
+                                                            String>>(
+                                                    (TableModel value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value.id,
+                                                    child: Text(value.id),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: DropdownButton<String>(
                                                 value: _currentSelectedProduct,
                                                 icon: const Icon(
                                                     Icons.arrow_downward),
@@ -228,10 +268,8 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                       return;
                                     }
 
-                                    /// TODO - ADD PRODUCT TO ORDER LIST
-                                    ///
-                                    ///
-                                    /// TODO - CREATE ORDER AT THE END HERE
+                                    createOrder();
+                                    Navigator.of(context).pop();
                                   },
                                   style:
                                       TextButton.styleFrom(primary: mainColor),
@@ -254,6 +292,21 @@ class _OrdersWidgetState extends State<OrdersWidget> {
         ]);
       },
     );
+  }
+
+  void createOrder() {
+    OrderModel newOrder = OrderModel(
+        products: (_dialogProducts),
+        quantities: _dialogProductQuantities,
+        tableId: _currentSelectedTable);
+
+    OrderList.addOrder(newOrder);
+
+    setState(() {
+      orders = OrderList.getOrderList();
+    });
+
+    saveOrders();
   }
 }
 
