@@ -9,6 +9,7 @@ class ProductModel implements Comparable<dynamic> {
     required this.category
   });
 
+
   ProductModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     price = json['price'];
