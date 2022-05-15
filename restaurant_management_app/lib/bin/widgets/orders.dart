@@ -72,8 +72,9 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                   size: 50,
                   icon: const Icon(Icons.add),
                   function: () async {
-                    //TODO - functie
-
+                    
+                    _dialogProducts = [];
+                    _dialogProductQuantities = [];
                     await showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -96,13 +97,15 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                       children: [
                                         const Text(
                                           "Choose Products",
-                                          style: TextStyle(color: Colors.black87),
+                                          style:
+                                              TextStyle(color: Colors.black87),
                                         ),
                                         Row(
                                           children: [
                                             Container(
-                                              margin: const EdgeInsets.symmetric(
-                                                  horizontal: 10),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
                                               child: DropdownButton<String>(
                                                 //table size selector
                                                 value: _currentSelectedProduct,
@@ -121,10 +124,12 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                                         newValue!;
                                                   });
                                                 },
-                                                items: _products
-                                                    .map<DropdownMenuItem<String>>(
-                                                        (ProductModel value) {
-                                                  return DropdownMenuItem<String>(
+                                                items: _products.map<
+                                                        DropdownMenuItem<
+                                                            String>>(
+                                                    (ProductModel value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
                                                     value: value.name,
                                                     child: Text(value.name),
                                                   );
@@ -137,27 +142,32 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                                   _dialogErrorMessage = "";
                                                 });
 
-                                                int? quantity = int.tryParse(_quantityController.text);
+                                                int? quantity = int.tryParse(
+                                                    _quantityController.text);
 
-                                                if (quantity == null || quantity <= 0) {
+                                                if (quantity == null ||
+                                                    quantity <= 0) {
                                                   setState(() {
                                                     _dialogErrorMessage =
-                                                    "Incorrect quantity! Must be a number higher than 0.";
+                                                        "Incorrect quantity! Must be a number higher than 0.";
                                                   });
                                                   return;
                                                 }
 
                                                 ProductModel product =
-                                                  ProductList.getProductByName(_currentSelectedProduct);
+                                                    ProductList.getProductByName(
+                                                        _currentSelectedProduct);
 
                                                 setState(() {
                                                   _dialogProducts.add(product);
-                                                  _dialogProductQuantities.add(quantity);
+                                                  _dialogProductQuantities
+                                                      .add(quantity);
                                                 });
                                               },
                                               child: const Text("Add",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.bold)),
+                                                      fontWeight:
+                                                          FontWeight.bold)),
                                               style: TextButton.styleFrom(
                                                   primary: mainColor),
                                             ),
@@ -169,23 +179,23 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                     // LayoutBuilder(
                                     //   builder: (context, constraints) {
                                     Flexible(
-                                      child: 
-                                          ListView.builder(
-                                            controller: ScrollController(),
-                                            itemBuilder: (BuildContext context, int index) {
-                                              
-                                              return DialogListItem(
-                                                name: _dialogProducts[index].name,
-                                                category: _dialogProducts[index].category,
-                                                quantity: _dialogProductQuantities[index],
-                                              );
-                                            },
-                                            itemCount: _dialogProducts.length,
-                                          )       
-                                    ),
+                                        child: ListView.builder(
+                                      controller: ScrollController(),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return DialogListItem(
+                                          name: _dialogProducts[index].name,
+                                          category:
+                                              _dialogProducts[index].category,
+                                          quantity:
+                                              _dialogProductQuantities[index],
+                                        );
+                                      },
+                                      itemCount: _dialogProducts.length,
+                                    )),
                                     //   }
                                     // ),
-                                    
+
                                     TextField(
                                       decoration: const InputDecoration(
                                           hintText: "Enter quantity"),
@@ -222,8 +232,6 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                     ///
                                     ///
                                     /// TODO - CREATE ORDER AT THE END HERE
-                                    
-                                    
                                   },
                                   style:
                                       TextButton.styleFrom(primary: mainColor),
@@ -247,7 +255,6 @@ class _OrdersWidgetState extends State<OrdersWidget> {
       },
     );
   }
-
 }
 
 //Order section/category widget
@@ -399,9 +406,9 @@ class OrderItem extends StatelessWidget {
       child: ListTile(
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(name + ' X' + quantity.toString()),
-              Text(totalPrice.toString()),
-            ]),
+          Text(name + ' X' + quantity.toString()),
+          Text(totalPrice.toString()),
+        ]),
         leading: Icon(
           sectionIcons[category],
           color: mainColor,
@@ -411,17 +418,17 @@ class OrderItem extends StatelessWidget {
   }
 }
 
-class DialogListItem extends StatelessWidget{
+class DialogListItem extends StatelessWidget {
   final String name;
   final int quantity;
   final String category;
 
-  const DialogListItem({
-    Key? key,
-    required this.name,
-    required this.quantity,
-    required this.category
-  }) : super(key: key);
+  const DialogListItem(
+      {Key? key,
+      required this.name,
+      required this.quantity,
+      required this.category})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -432,9 +439,9 @@ class DialogListItem extends StatelessWidget{
       child: ListTile(
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(name),
-              Text('X' + quantity.toString()),
-            ]),
+          Text(name),
+          Text('X' + quantity.toString()),
+        ]),
         leading: Icon(
           sectionIcons[category],
           color: mainColor,
