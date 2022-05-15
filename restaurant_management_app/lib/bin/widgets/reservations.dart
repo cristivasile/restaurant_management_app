@@ -22,8 +22,7 @@ const double buttonSize = 45;
 class _ReservationState extends State<Reservation> {
   int currentFloor = 0;
   List<UnmovableTableWidget> _tableWidgets = [];
-  List<TableModel> _tableModelList =
-      []; //required for the first initialization of _tableWidgets
+  List<TableModel> _tableModelList = []; //required for the first initialization of _tableWidgets
   List<String> _tableIds = ['none'];
   bool _read = false;
   bool _firstBuild = true;
@@ -104,6 +103,7 @@ class _ReservationState extends State<Reservation> {
                       ),
                     ],
                   )),
+                  // ignore: avoid_unnecessary_containers
                   Container(
                     child: Row(
                       // save changes group

@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/main.dart';
 import '../entities/table_list.dart';
-import '../models/table_model.dart' as table_model;
 import '../models/table_model.dart';
 import '../widgets/table_widget.dart';
 
@@ -11,10 +10,10 @@ import '../widgets/table_widget.dart';
 /// @param tables: a list of tables
 /// @param constraints: a MovableTable needs the BoxConstraints from where it is created
 List<MovableTableWidget> getWidgetsFromTables(
-    List<table_model.TableModel> tables, BoxConstraints constraints) {
+    List<TableModel> tables, BoxConstraints constraints) {
   List<MovableTableWidget> result = [];
 
-  for (table_model.TableModel table in tables) {
+  for (TableModel table in tables) {
     UniqueKey key = UniqueKey();
     result.add(MovableTableWidget(
       key: key, //assigns new unique key to prevent states from jumping over
@@ -32,12 +31,12 @@ List<MovableTableWidget> getWidgetsFromTables(
 /// Returns a list of Table from a list of MovableTable widgets
 ///
 ///@param tableWidgets: list of widgets
-List<table_model.TableModel> getTablesFromTableWidgets(
+List<TableModel> getTablesFromTableWidgets(
     List<MovableTableWidget> tableWidgets) {
-  List<table_model.TableModel> tables = [];
+  List<TableModel> tables = [];
 
   for (MovableTableWidget widget in tableWidgets) {
-    tables.add(table_model.TableModel(
+    tables.add(TableModel(
         id: widget.id,
         xOffset: widget.position.dx,
         yOffset: widget.position.dy,
@@ -61,6 +60,24 @@ Future<void> saveTables() async {
   List<TableModel> toSave = await TableList.getTableList();
   data.writeTables(toSave); // use global data service to store tables
 }
+
+
+String getTableLetterFromSize(tableSize) {
+    switch (tableSize) {
+      case 2:
+        return 'A';
+      case 3:
+        return 'B';
+      case 4:
+        return 'C';
+      case 6:
+        return 'D';
+      case 8:
+        return 'E';
+    }
+    throw Exception("Invalid table size!");
+  }
+
 
 /// Generates unique ID for a table. Must receive either a list of tables or list of tableWidgets.
 ///
