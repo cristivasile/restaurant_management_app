@@ -1,1 +1,8 @@
-[{"id":"A1","xOffset":584.9999999999998,"yOffset":183.79999999999995,"tableSize":2,"floor":0},{"id":"A2","xOffset":733.4000000000003,"yOffset":184.8000000000004,"tableSize":2,"floor":0},{"id":"D1","xOffset":1008.2000000000006,"yOffset":242.99999999999994,"tableSize":6,"floor":0},{"id":"D2","xOffset":334.50000000000114,"yOffset":102.89999999999986,"tableSize":6,"floor":0},{"id":"D3","xOffset":1012.7999999999997,"yOffset":63.00000000000074,"tableSize":6,"floor":0},{"id":"E2","xOffset":622.2,"yOffset":71.40000000000066,"tableSize":8,"floor":0},{"id":"A3","xOffset":255.0,"yOffset":275.4,"tableSize":2,"floor":0},{"id":"A4","xOffset":91.0,"yOffset":269.0,"tableSize":2,"floor":0}]
+[{"id":"A1","xOffset":90.59999999999985,"yOffset":191.00000000000023,"tableSize":2,"floor":0},
+    {"id":"A2","xOffset":320.6000000000003,"yOffset":189.60000000000048,"tableSize":2,"floor":0},
+    {"id":"D1","xOffset":944.1999999999991,"yOffset":30.199999999999648,"tableSize":6,"floor":0},
+    {"id":"D2","xOffset":92.90000000000131,"yOffset":41.29999999999961,"tableSize":6,"floor":0},
+    {"id":"D3","xOffset":640.7999999999995,"yOffset":27.000000000000625,"tableSize":6,"floor":0},
+    {"id":"E2","xOffset":365.40000000000015,"yOffset":27.400000000000546,"tableSize":8,"floor":0},
+    {"id":"A3","xOffset":1023.0,"yOffset":215.40000000000032,"tableSize":2,"floor":0},
+    {"id":"A4","xOffset":90.19999999999999,"yOffset":324.1999999999994,"tableSize":2,"floor":0}]
