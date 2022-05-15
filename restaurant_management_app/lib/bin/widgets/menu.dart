@@ -41,7 +41,7 @@ class _MenuSectionState extends State<MenuSection> {
   String _errorMessage = "";
   List<ProductModel> _products = [];
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController priceController  = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _MenuSectionState extends State<MenuSection> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     nameController.dispose();
     priceController.dispose();
     super.dispose();
@@ -61,7 +61,7 @@ class _MenuSectionState extends State<MenuSection> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 1.0),
       child: Column(
-        children: <Widget> [
+        children: <Widget>[
           Container(
             // top bar containing title and expand button
             color: accent1Color,
@@ -72,123 +72,155 @@ class _MenuSectionState extends State<MenuSection> {
                 Row(
                   children: [
                     IconButton(
-                      // expand button
-                      icon: Container(
-                        height: 50.0,
-                        width: 50.0,
-                        decoration: const BoxDecoration(
-                          color: mainColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            _expandFlag
-                                ? Icons.keyboard_arrow_up
-                                : Icons.keyboard_arrow_down,
-                            color: Colors.white,
-                            size: 24,
+                        // expand button
+                        icon: Container(
+                          height: 50.0,
+                          width: 50.0,
+                          decoration: const BoxDecoration(
+                            color: mainColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Icon(
+                              _expandFlag
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                           ),
                         ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _expandFlag = !_expandFlag;
-                        });
-                      }),
+                        onPressed: () {
+                          setState(() {
+                            _expandFlag = !_expandFlag;
+                          });
+                        }),
                     IconButton(
-                      // expand button
-                      icon: Container(
-                        height: 50.0,
-                        width: 50.0,
-                        decoration: const BoxDecoration(
-                          color: mainColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.add,
-                            color: Colors.white,
-                            size: 24,
+                        // expand button
+                        icon: Container(
+                          height: 50.0,
+                          width: 50.0,
+                          decoration: const BoxDecoration(
+                            color: mainColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                           ),
                         ),
-                      ),
-                      onPressed: () async {
+                        onPressed: () async {
+                          setState(() {
+                            _expandFlag = true;
+                          });
 
-                        setState(() {
-                          _expandFlag = true;
-                        });
+                          await showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      "Add new item",
+                                      style: TextStyle(color: mainColor),
+                                    ),
+                                    content: SizedBox(
+                                      height: 200,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          TextField(
+                                            decoration: const InputDecoration(
+                                                hintText: "Enter product name"),
+                                            controller: nameController,
+                                          ),
+                                          TextField(
+                                            decoration: const InputDecoration(
+                                                hintText: "Enter price"),
+                                            controller: priceController,
+                                          ),
+                                          Text(
+                                            _errorMessage,
+                                            style: const TextStyle(
+                                                color: Colors.redAccent),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('Add'),
+                                        onPressed: () {
+                                          setState(() {
+                                            _errorMessage = "";
+                                          });
 
-                        await showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context){
-                            return StatefulBuilder(
-                              builder: (context, setState) {
-                              return AlertDialog(
-                                title: const Text("Add new item", style: TextStyle(color: mainColor),),
-                                content: 
-                                  SizedBox(
-                                    height: 200,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                      TextField(decoration: const InputDecoration(hintText: "Enter product name"), controller: nameController,),
-                                      TextField(decoration: const InputDecoration(hintText: "Enter price"), controller: priceController,),
-                                      Text(_errorMessage, style: const TextStyle(color: Colors.redAccent),),
-                                    ],),
-                                  ),
-                                
-                                actions: [
-                                  TextButton(child: const Text('Add'),
-                                  onPressed: () {
+                                          String name =
+                                              nameController.text.trim();
 
-                                    setState(() {
-                                      _errorMessage = "";
-                                    });
+                                          if (name.length < 3) {
+                                            setState(() {
+                                              _errorMessage =
+                                                  "Product name must have at least 3 characters!";
+                                            });
+                                            return;
+                                          }
 
-                                    String name = nameController.text.trim();
+                                          if (name.length > 20) {
+                                            setState(() {
+                                              _errorMessage =
+                                                  "Product name must have at most 20 characters!";
+                                            });
+                                            return;
+                                          }
 
-                                    if(name.length < 3){
-                                      setState(() {
-                                        _errorMessage = "Product name must have at least 3 characters!";
-                                      });
-                                      return;
-                                    }
+                                          for (var product
+                                              in ProductList.getProductList()) {
+                                            if (name.toLowerCase() ==
+                                                product.name.toLowerCase()) {
+                                              setState(() {
+                                                _errorMessage =
+                                                    "Product name already exists!";
+                                              });
+                                              return;
+                                            }
+                                          }
 
-                                    if(name.length > 20){
-                                      setState(() {
-                                        _errorMessage = "Product name must have at most 20 characters!";
-                                      });
-                                      return;
-                                    }
+                                          double? price = double.tryParse(
+                                              priceController.text);
 
-                                    for(var product in ProductList.getProductList()){
-                                      if(name.toLowerCase() == product.name.toLowerCase()){
-                                        setState(() {
-                                        _errorMessage = "Product name already exists!";
-                                      });
-                                      return;
-                                      }
-                                    }
+                                          if (price == null || price <= 0) {
+                                            setState(() {
+                                              _errorMessage =
+                                                  "Incorrect price! Must be a number higher than 0.";
+                                            });
+                                            return;
+                                          }
 
-                                    double? price = double.tryParse(priceController.text);
-
-                                    if(price == null || price <= 0) {
-                                      setState(() {
-                                        _errorMessage = "Incorrect price! Must be a number higher than 0.";
-                                      });
-                                      return;
-                                    }
-
-                                    createProduct(name, price, widget.title);
-                                  }, style: TextButton.styleFrom(primary: mainColor),),
-                                  TextButton(child: const Text('Cancel'),
-                                  onPressed: () {Navigator.of(context).pop();}, style: TextButton.styleFrom(primary: mainColor),),
-                                ],
-                              );
-                              }
-                            );}
-                        );
-                      }),
+                                          createProduct(
+                                              name, price, widget.title);
+                                        },
+                                        style: TextButton.styleFrom(
+                                            primary: mainColor),
+                                      ),
+                                      TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: TextButton.styleFrom(
+                                            primary: mainColor),
+                                      ),
+                                    ],
+                                  );
+                                });
+                              });
+                        }),
                   ],
                 ),
                 Text(
@@ -232,10 +264,11 @@ class _MenuSectionState extends State<MenuSection> {
     );
   }
 
-  void createProduct(String name, double price, String category){
-    ProductModel newProduct = ProductModel(name: name, price: price, category: category);
+  void createProduct(String name, double price, String category) {
+    ProductModel newProduct =
+        ProductModel(name: name, price: price, category: category);
     ProductList.addProduct(newProduct);
-    
+
     setState(() {
       _products = ProductList.getProductList();
     });
@@ -243,13 +276,13 @@ class _MenuSectionState extends State<MenuSection> {
     saveProducts();
   }
 
-  void deleteProductByName(String name){
+  void deleteProductByName(String name) {
     ProductList.removeProductByName(name);
 
     setState(() {
       _products = ProductList.getProductList();
     });
-    
+
     saveProducts();
   }
 }
@@ -312,16 +345,22 @@ class MenuItem extends StatelessWidget {
           color: accent2Color),
       child: ListTile(
         title:
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(name),
-            Row(
-              children: [
-                Container(
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(name),
+          Row(
+            children: [
+              Container(
                   margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                   child: Text(price.toString())),
-                CustomButton(color: Colors.red, function: () {function(name);}, size: 25, icon: const Icon(Icons.delete)),
-              ],
-            ),
+              CustomButton(
+                  color: Colors.red,
+                  function: () {
+                    function(name);
+                  },
+                  size: 25,
+                  icon: const Icon(Icons.delete)),
+            ],
+          ),
         ]),
         leading: Icon(
           sectionIcons[category],
