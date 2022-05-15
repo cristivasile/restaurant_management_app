@@ -26,6 +26,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
   String _dialogErrorMessage = "";
   String _currentSelectedProduct = '';
   List<ProductModel> _dialogProducts = [];
+  List<int> _dialogProductQuantities = [];
   final TextEditingController _quantityController = TextEditingController();
 
   @override
@@ -91,8 +92,6 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     ////
-                                    /// TODO - THIS SHOULD BE A DROPDOWN, FOLLOWED BY A BUTTON TO ADD THE PRODUCT TO THE ORDER'S LIST
-                                    /// CHECK DROPDOWN EXAMPLE IN FLOORPLAN.DART
                                     Column(
                                       children: [
                                         const Text(
@@ -134,7 +133,27 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                             ),
                                             TextButton(
                                               onPressed: () {
-                                                addProductToDialogList();
+                                                setState(() {
+                                                  _dialogErrorMessage = "";
+                                                });
+
+                                                int? quantity = int.tryParse(_quantityController.text);
+
+                                                if (quantity == null || quantity <= 0) {
+                                                  setState(() {
+                                                    _dialogErrorMessage =
+                                                    "Incorrect quantity! Must be a number higher than 0.";
+                                                  });
+                                                  return;
+                                                }
+
+                                                ProductModel product =
+                                                  ProductList.getProductByName(_currentSelectedProduct);
+
+                                                setState(() {
+                                                  _dialogProducts.add(product);
+                                                  _dialogProductQuantities.add(quantity);
+                                                });
                                               },
                                               child: const Text("Add",
                                                   style: TextStyle(
@@ -147,7 +166,26 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                                       ],
                                     ),
 
-                                    /// TODO - BUTTON HERE
+                                    // LayoutBuilder(
+                                    //   builder: (context, constraints) {
+                                    Flexible(
+                                      child: 
+                                          ListView.builder(
+                                            controller: ScrollController(),
+                                            itemBuilder: (BuildContext context, int index) {
+                                              
+                                              return DialogListItem(
+                                                name: _dialogProducts[index].name,
+                                                category: _dialogProducts[index].category,
+                                                quantity: _dialogProductQuantities[index],
+                                              );
+                                            },
+                                            itemCount: _dialogProducts.length,
+                                          )       
+                                    ),
+                                    //   }
+                                    // ),
+                                    
                                     TextField(
                                       decoration: const InputDecoration(
                                           hintText: "Enter quantity"),
@@ -210,28 +248,6 @@ class _OrdersWidgetState extends State<OrdersWidget> {
     );
   }
 
-  void addProductToDialogList() async {
-    setState(() {
-      _dialogErrorMessage = "";
-    });
-
-    int? quantity = int.tryParse(_quantityController.text);
-
-    if (quantity == null || quantity <= 0) {
-      setState(() {
-        _dialogErrorMessage =
-            "Incorrect quantity! Must be a number higher than 0.";
-      });
-      return;
-    }
-
-    ProductModel product =
-        ProductList.getProductByName(_currentSelectedProduct);
-
-    setState(() {
-      _dialogProducts.add(product);
-    });
-  }
 }
 
 //Order section/category widget
@@ -383,9 +399,42 @@ class OrderItem extends StatelessWidget {
       child: ListTile(
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(name + ' X' + quantity.toString()),
-          Text(totalPrice.toString()),
-        ]),
+              Text(name + ' X' + quantity.toString()),
+              Text(totalPrice.toString()),
+            ]),
+        leading: Icon(
+          sectionIcons[category],
+          color: mainColor,
+        ),
+      ),
+    );
+  }
+}
+
+class DialogListItem extends StatelessWidget{
+  final String name;
+  final int quantity;
+  final String category;
+
+  const DialogListItem({
+    Key? key,
+    required this.name,
+    required this.quantity,
+    required this.category
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(width: 1, color: accent1Color),
+          color: accent2Color),
+      child: ListTile(
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text(name),
+              Text('X' + quantity.toString()),
+            ]),
         leading: Icon(
           sectionIcons[category],
           color: mainColor,
