@@ -38,15 +38,12 @@ class MyApp extends StatelessWidget {
         length: 5,
         child: Scaffold(
           appBar: AppBar(
-            bottom: TabBar(
+            bottom: const TabBar(
               tabs: <Widget>[
                 Tab(
                   icon: Icon(Icons.create_outlined), 
                   text: "Edit floor plan"
                 ),
-                Tab(
-                    icon: Icon(Icons.view_list_outlined),
-                    text: "View order list"),
                 Tab(
                   icon: Icon(Icons.bookmark_added_outlined),
                   text: "Manage reservations"
@@ -59,6 +56,9 @@ class MyApp extends StatelessWidget {
                   icon: Icon(Icons.view_list_outlined),
                   text: "View order list"
                 ),
+                Tab(
+                    icon: Icon(Icons.view_list_outlined),
+                    text: "Reservations"),
               ],
               indicatorColor: accent2Color,
               indicatorWeight: 3,
