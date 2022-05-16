@@ -6,7 +6,7 @@ class OrderModel {
   late double price;
   late String tableId;
 
-  // quantities is a map of (product:quantity_ordered)
+  
   OrderModel(
       {required this.products,
       required this.quantities,

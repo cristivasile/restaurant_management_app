@@ -3,10 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/models/product_model.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'package:restaurant_management_app/bin/services/order_service.dart';
+import 'package:restaurant_management_app/bin/widgets/custom_button.dart';
 
 import '../constants.dart';
+import '../entities/product_list.dart';
+import '../entities/table_list.dart';
 import '../models/order_model.dart';
 import '../entities/order_list.dart';
+import '../models/table_model.dart';
 
 const double expandedMaxHeight = 400;
 
@@ -20,19 +25,288 @@ class OrdersWidget extends StatefulWidget {
 }
 
 class _OrdersWidgetState extends State<OrdersWidget> {
+  List<ProductModel> _products = [];
+  List<TableModel> _tables = [];
+
+  String _dialogErrorMessage = '';
+  String _currentSelectedProduct = '';
+  String _currentSelectedTable = '';
+
+  List<ProductModel> _dialogProducts = [];
+  List<int> _dialogProductQuantities = [];
+  final TextEditingController _quantityController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _products = ProductList.getProductList();
+    _tables = TableList.getTableListNonAsync();
+    _currentSelectedProduct = _products[0].name;
+    _currentSelectedTable = _tables[0].id;
+  }
+
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        controller: ScrollController(),
-        itemBuilder: (BuildContext context, int index) {
-          return OrderSection(
-            title: orders[index].tableId +
-                '     ' +
-                orders[index].price.toString(),
-            orderModel: orders[index],
-          );
-        },
-        itemCount: orders.length);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Column(children: [
+          SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight * 9 / 10,
+            child: ListView.builder(
+                controller: ScrollController(),
+                itemBuilder: (BuildContext context, int index) {
+                  return OrderSection(
+                    title: orders[index].tableId +
+                        '     ' +
+                        orders[index].price.toString(),
+                    orderModel: orders[index],
+                  );
+                },
+                itemCount: orders.length),
+          ),
+          SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight * 1 / 10,
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                CustomButton(
+                  color: Colors.orange,
+                  size: 50,
+                  icon: const Icon(Icons.add),
+                  function: () async {
+                    _dialogProducts = [];
+                    _dialogProductQuantities = [];
+                    await showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                              title: const Text(
+                                "Add new order",
+                                style: TextStyle(color: mainColor),
+                              ),
+                              content: SizedBox(
+                                height: 300,
+                                width: 300,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    ////
+                                    Column(
+                                      children: [
+                                        const Text(
+                                          "Choose Products",
+                                          style:
+                                              TextStyle(color: Colors.black87),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: DropdownButton<String>(
+                                                value: _currentSelectedTable,
+                                                icon: const Icon(
+                                                    Icons.arrow_downward),
+                                                elevation: 16,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                                underline: Container(
+                                                  height: 2,
+                                                  color: mainColor,
+                                                ),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    _currentSelectedTable =
+                                                        newValue!;
+                                                  });
+                                                },
+                                                items: _tables.map<
+                                                        DropdownMenuItem<
+                                                            String>>(
+                                                    (TableModel value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value.id,
+                                                    child: Text(value.id),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: DropdownButton<String>(
+                                                value: _currentSelectedProduct,
+                                                icon: const Icon(
+                                                    Icons.arrow_downward),
+                                                elevation: 16,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                                underline: Container(
+                                                  height: 2,
+                                                  color: mainColor,
+                                                ),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    _currentSelectedProduct =
+                                                        newValue!;
+                                                  });
+                                                },
+                                                items: _products.map<
+                                                        DropdownMenuItem<
+                                                            String>>(
+                                                    (ProductModel value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value.name,
+                                                    child: Text(value.name),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _dialogErrorMessage = "";
+                                                });
+
+                                                int? quantity = int.tryParse(
+                                                    _quantityController.text);
+
+                                                if (quantity == null ||
+                                                    quantity <= 0) {
+                                                  setState(() {
+                                                    _dialogErrorMessage =
+                                                        "Incorrect quantity! Must be a number higher than 0.";
+                                                  });
+                                                  return;
+                                                }
+
+                                                ProductModel product =
+                                                    ProductList.getProductByName(
+                                                        _currentSelectedProduct);
+
+                                                setState(() {
+                                                  _dialogProducts.add(product);
+                                                  _dialogProductQuantities
+                                                      .add(quantity);
+                                                });
+                                              },
+                                              child: const Text("Add",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              style: TextButton.styleFrom(
+                                                  primary: mainColor),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+
+                                    // LayoutBuilder(
+                                    //   builder: (context, constraints) {
+                                    Flexible(
+                                        child: ListView.builder(
+                                      controller: ScrollController(),
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return DialogListItem(
+                                          name: _dialogProducts[index].name,
+                                          category:
+                                              _dialogProducts[index].category,
+                                          quantity:
+                                              _dialogProductQuantities[index],
+                                        );
+                                      },
+                                      itemCount: _dialogProducts.length,
+                                    )),
+                                    //   }
+                                    // ),
+
+                                    TextField(
+                                      decoration: const InputDecoration(
+                                          hintText: "Enter quantity"),
+                                      controller: _quantityController,
+                                    ),
+                                    Text(
+                                      _dialogErrorMessage,
+                                      style: const TextStyle(
+                                          color: Colors.redAccent),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text('Add'),
+                                  onPressed: () {
+                                    setState(() {
+                                      _dialogErrorMessage = "";
+                                    });
+
+                                    int? quantity =
+                                        int.tryParse(_quantityController.text);
+
+                                    if (quantity == null || quantity <= 0) {
+                                      setState(() {
+                                        _dialogErrorMessage =
+                                            "Incorrect quantity! Must be a number higher than 0.";
+                                      });
+                                      return;
+                                    }
+
+                                    createOrder();
+                                    Navigator.of(context).pop();
+                                  },
+                                  style:
+                                      TextButton.styleFrom(primary: mainColor),
+                                ),
+                                TextButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  style:
+                                      TextButton.styleFrom(primary: mainColor),
+                                ),
+                              ],
+                            );
+                          });
+                        });
+                  },
+                )
+              ]))
+        ]);
+      },
+    );
+  }
+
+  void createOrder() {
+    OrderModel newOrder = OrderModel(
+        products: (_dialogProducts),
+        quantities: _dialogProductQuantities,
+        tableId: _currentSelectedTable);
+
+    OrderList.addOrder(newOrder);
+
+    setState(() {
+      orders = OrderList.getOrderList();
+    });
+
+    saveOrders();
   }
 }
 
@@ -187,6 +461,39 @@ class OrderItem extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(name + ' X' + quantity.toString()),
           Text(totalPrice.toString()),
+        ]),
+        leading: Icon(
+          sectionIcons[category],
+          color: mainColor,
+        ),
+      ),
+    );
+  }
+}
+
+class DialogListItem extends StatelessWidget {
+  final String name;
+  final int quantity;
+  final String category;
+
+  const DialogListItem(
+      {Key? key,
+      required this.name,
+      required this.quantity,
+      required this.category})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(width: 1, color: accent1Color),
+          color: accent2Color),
+      child: ListTile(
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(name),
+          Text('X' + quantity.toString()),
         ]),
         leading: Icon(
           sectionIcons[category],
