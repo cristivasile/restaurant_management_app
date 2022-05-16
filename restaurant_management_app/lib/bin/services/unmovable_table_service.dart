@@ -1,27 +1,29 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:restaurant_management_app/bin/widgets/unmovable_table_widget.dart';
 import 'package:restaurant_management_app/main.dart';
 import '../entities/table_list.dart';
+import '../models/table_model.dart' as table_model;
 import '../models/table_model.dart';
-import '../widgets/table_widget.dart';
+import '../widgets/unmovable_table_widget.dart';
 
 /// Returns a list of MovableTable from a list of tables
 ///
 /// @param tables: a list of tables
 /// @param constraints: a MovableTable needs the BoxConstraints from where it is created
-List<MovableTableWidget> getWidgetsFromTables(
-    List<TableModel> tables, BoxConstraints constraints) {
-  List<MovableTableWidget> result = [];
+List<UnmovableTableWidget> getWidgetsFromTables(
+    List<table_model.TableModel> tables, void Function() fun) {
+  List<UnmovableTableWidget> result = [];
 
-  for (TableModel table in tables) {
+  for (table_model.TableModel table in tables) {
     UniqueKey key = UniqueKey();
-    result.add(MovableTableWidget(
+    result.add(UnmovableTableWidget(
       key: key, //assigns new unique key to prevent states from jumping over
-      constraints: constraints,
       tableSize: table.tableSize,
       position: Offset(table.xOffset, table.yOffset),
       id: table.id,
       floor: table.floor,
+      callback: fun,
     ));
   }
 
@@ -31,12 +33,12 @@ List<MovableTableWidget> getWidgetsFromTables(
 /// Returns a list of Table from a list of MovableTable widgets
 ///
 ///@param tableWidgets: list of widgets
-List<TableModel> getTablesFromTableWidgets(
-    List<MovableTableWidget> tableWidgets) {
-  List<TableModel> tables = [];
+List<table_model.TableModel> getTablesFromTableWidgets(
+    List<UnmovableTableWidget> tableWidgets) {
+  List<table_model.TableModel> tables = [];
 
-  for (MovableTableWidget widget in tableWidgets) {
-    tables.add(TableModel(
+  for (UnmovableTableWidget widget in tableWidgets) {
+    tables.add(table_model.TableModel(
         id: widget.id,
         xOffset: widget.position.dx,
         yOffset: widget.position.dy,
@@ -61,31 +63,13 @@ Future<void> saveTables() async {
   data.writeTables(toSave); // use global data service to store tables
 }
 
-
-String getTableLetterFromSize(tableSize) {
-    switch (tableSize) {
-      case 2:
-        return 'A';
-      case 3:
-        return 'B';
-      case 4:
-        return 'C';
-      case 6:
-        return 'D';
-      case 8:
-        return 'E';
-    }
-    throw Exception("Invalid table size!");
-  }
-
-
 /// Generates unique ID for a table. Must receive either a list of tables or list of tableWidgets.
 ///
 /// @param(optional) tables = a list of tables
 /// @param(optional)
 String generateTableId(
     {List<TableModel>? tables,
-    List<MovableTableWidget>? tableWidgets,
+    List<UnmovableTableWidget>? tableWidgets,
     required int tableSize}) {
   /// Returns corresponding table letter, given a size
   ///
@@ -146,7 +130,7 @@ String generateTableId(
   return "${getTableLetterFromSize()}${frequency.length + 1}";
 }
 
-TableModel getTableModelFromWidget(MovableTableWidget widget) {
+TableModel getTableModelFromWidget(UnmovableTableWidget widget) {
   return TableModel(
       id: widget.id,
       xOffset: widget.position.dx,

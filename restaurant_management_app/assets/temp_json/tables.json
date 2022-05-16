@@ -1,1 +1,105 @@
-[{"id":"A2","xOffset":302.2000000000002,"yOffset":240.00000000000063,"tableSize":2,"floor":0},{"id":"D1","xOffset":564.1999999999994,"yOffset":28.599999999999625,"tableSize":6,"floor":0},{"id":"D2","xOffset":68.10000000000133,"yOffset":46.09999999999951,"tableSize":6,"floor":0},{"id":"D3","xOffset":990.3999999999994,"yOffset":39.000000000000625,"tableSize":6,"floor":0},{"id":"E2","xOffset":69.4000000000006,"yOffset":302.5999999999994,"tableSize":8,"floor":0},{"id":"A3","xOffset":767.7999999999998,"yOffset":181.0,"tableSize":2,"floor":0},{"id":"A4","xOffset":345.39999999999964,"yOffset":84.99999999999932,"tableSize":2,"floor":0},{"id":"A5","xOffset":544.800000000001,"yOffset":307.1999999999992,"tableSize":2,"floor":0},{"id":"A6","xOffset":564.8000000000002,"yOffset":176.79999999999978,"tableSize":2,"floor":0},{"id":"C1","xOffset":873.5999999999998,"yOffset":294.3999999999998,"tableSize":4,"floor":0},{"id":"D4","xOffset":996.0000000000013,"yOffset":188.80000000000047,"tableSize":6,"floor":0}]
+[{
+"id": "A1",
+"xOffset": 1299.399999999989,
+"yOffset": 126.20000000000624,
+"tableSize": 2,
+"floor": 0
+},
+{
+"id": "A2",
+"xOffset": 1299.7999999999843,
+"yOffset": 23.599999999999056,
+"tableSize": 2,
+"floor": 0
+},
+{
+"id": "D1",
+"xOffset": 25.800000000001205,
+"yOffset": 32.5999999999965,
+"tableSize": 6,
+"floor": 0
+},
+{
+"id": "D2",
+"xOffset": 24.100000000007654,
+"yOffset": 207.70000000000158,
+"tableSize": 6,
+"floor": 0
+},
+{
+"id": "D3",
+"xOffset": 25.600000000001245,
+"yOffset": 394.60000000000525,
+"tableSize": 6,
+"floor": 0
+},
+{
+"id": "A3",
+"xOffset": 1127.0000000000018,
+"yOffset": 126.60000000000457,
+"tableSize": 2,
+"floor": 0
+},
+{
+"id": "A4",
+"xOffset": 1127.000000000007,
+"yOffset": 23.399999999998073,
+"tableSize": 2,
+"floor": 0
+},
+{
+"id": "E1",
+"xOffset": 460.0000000000057,
+"yOffset": 307.200000000008,
+"tableSize": 8,
+"floor": 0
+},
+{
+"id": "B1",
+"xOffset": 1303.1999999999946,
+"yOffset": 376.8000000000046,
+"tableSize": 3,
+"floor": 0
+},
+{
+"id": "B2",
+"xOffset": 1130.399999999992,
+"yOffset": 376.80000000000007,
+"tableSize": 3,
+"floor": 0
+},
+{
+"id": "C1",
+"xOffset": 835.2000000000037,
+"yOffset": 379.1999999999965,
+"tableSize": 4,
+"floor": 0
+},
+{
+"id": "C2",
+"xOffset": 834.3999999999979,
+"yOffset": 46.40000000000026,
+"tableSize": 4,
+"floor": 0
+},
+{
+"id": "C3",
+"xOffset": 835.1999999999999,
+"yOffset": 213.60000000000247,
+"tableSize": 4,
+"floor": 0
+},
+{
+"id": "E2",
+"xOffset": 458.4000000000001,
+"yOffset": 118.40000000000111,
+"tableSize": 8,
+"floor": 0
+},
+{
+"id": "B3",
+"xOffset": 1215.9999999999943,
+"yOffset": 253.6000000000024,
+"tableSize": 3,
+"floor": 0
+}]

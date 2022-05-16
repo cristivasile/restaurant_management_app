@@ -44,7 +44,8 @@ class JsonProvider implements DataProvider {
 
   @override
   Future<void> writeTables(List<TableModel> tableList) async {
-    await File(tablePath).writeAsString(json.encode(tableList));
+    String tableString = "[${tableList.join(",\n")}]";
+    await File(tablePath).writeAsString(tableString);
   }
 
   @override
@@ -56,9 +57,10 @@ class JsonProvider implements DataProvider {
 
   @override
   Future<void> writeProducts(List<ProductModel> productList) async {
-    await File(productPath).writeAsString(json.encode(productList));
+    String productString = "[${productList.join(",\n")}]";
+    await File(productPath).writeAsString(productString);
   }
-
+  
   @override
   Future<List<OrderModel>> readOrders() async {
     final jsondata = await services.rootBundle.loadString(orderPath);

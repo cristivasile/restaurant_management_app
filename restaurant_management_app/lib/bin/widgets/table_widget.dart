@@ -9,13 +9,13 @@ import '../entities/table_list.dart';
 class MovableTableWidget extends StatefulWidget {
   final BoxConstraints constraints; //widget constraints received as parameter
   final String imagePath; //the corresponding table's image path
-  final int _imageWidth; // width of the displayed image
+  final int imageWidth; // width of the displayed image
   final int imageHeight; // height of the displayed image
   final int tableSize;
   final String id;
   final int floor;
-  final Offset
-      position; // position relative to the top left corner of the container
+  final Offset position; // position relative to the top left corner of the container
+
   MovableTableWidget({
     Key? key,
     required this.constraints,
@@ -24,7 +24,7 @@ class MovableTableWidget extends StatefulWidget {
     required this.id,
     required this.floor,
   })  : imagePath = getImagePath(tableSize),
-        _imageWidth = getImageSize(tableSize)[0],
+        imageWidth = getImageSize(tableSize)[0],
         imageHeight = getImageSize(tableSize)[1],
         super(key: key);
 
@@ -50,7 +50,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
         // image displayed under the mouse while dragging
         feedback: Image(
             image: AssetImage(widget.imagePath + ".png"),
-            width: widget._imageWidth.toDouble(),
+            width: widget.imageWidth.toDouble(),
             height: widget.imageHeight.toDouble()),
         // image displayed normally
         child: Stack(
@@ -58,21 +58,23 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
           children: <Widget>[
             Image(
               image: AssetImage(widget.imagePath + ".png"),
-              width: widget._imageWidth.toDouble(),
+              width: widget.imageWidth.toDouble(),
               height: widget.imageHeight.toDouble(),
             ),
             Text(
               widget.id,
               style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),
         //image displayed at the table position while moving it
         childWhenDragging: Image(
             image:
-                AssetImage(widget.imagePath + constants.feedbackPath + ".png"),
-            width: widget._imageWidth.toDouble(),
+                AssetImage(widget.imagePath + "_feedback" + ".png"),
+            width: widget.imageWidth.toDouble(),
             height: widget.imageHeight.toDouble()),
         onDragEnd: (DraggableDetails details) {
           setState(() {
@@ -87,7 +89,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
             // + margin of the container
 
             //check if the position is inside the container: right, left, top, bottom
-            if (details.offset.dx + widget._imageWidth <
+            if (details.offset.dx + widget.imageWidth <
                     MediaQuery.of(context).size.width &&
                 details.offset.dx > 0 + adjustmentx &&
                 details.offset.dy > 0 + adjustmenty &&
@@ -107,6 +109,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
   }
 }
 
+
 /// Receives a table size and returns the path to the corresponding image
 ///
 /// @param tableSize: size of the table
@@ -114,19 +117,20 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
 String getImagePath(int tableSize) {
   switch (tableSize) {
     case 2:
-      return constants.twoTablePath;
+      return constants.AssetPaths.small2.value;
     case 3:
-      return constants.threeTablePath;
+      return constants.AssetPaths.small3.value;
     case 4:
-      return constants.fourTablePath;
+      return constants.AssetPaths.small4.value;
     case 6:
-      return constants.sixTablePath;
+      return constants.AssetPaths.large6.value;
     case 8:
-      return constants.eightTablePath;
+      return constants.AssetPaths.large8.value;
   }
 
   throw Exception("Invalid table size!");
 }
+
 
 /// Receives a table size and returns a list containing the required dimensions
 ///
@@ -134,12 +138,12 @@ String getImagePath(int tableSize) {
 ///@returns List<int> containing [0] = width and [1] = height
 List<int> getImageSize(int tableSize) {
   const List<int> smallTable = [
-    constants.smallTableWidth,
-    constants.smallTableWidth
+    constants.smallTblWidth,
+    constants.tblHeight
   ];
   const List<int> largeTable = [
-    constants.largeTableWidth,
-    constants.smallTableWidth
+    constants.largeTblWidth,
+    constants.tblHeight
   ];
 
   switch (tableSize) {

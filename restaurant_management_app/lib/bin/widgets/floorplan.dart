@@ -9,7 +9,7 @@ import 'custom_button.dart';
 
 /// Floor plan builder
 class FloorPlan extends StatefulWidget {
-  const FloorPlan({Key? key}) : super(key: key);
+  const FloorPlan(Key? key) : super(key: key);
 
   @override
   State<FloorPlan> createState() => _FloorPlanState();
@@ -25,8 +25,7 @@ class _FloorPlanState extends State<FloorPlan> {
   String _addDropdownValue = '2';
   String _removeDropdownValue = 'none';
   List<MovableTableWidget> _tableWidgets = [];
-  List<TableModel> _tableModelList =
-      []; //required for the first initialization of _tableWidgets
+  List<TableModel> _tableModelList = []; //required for the first initialization of _tableWidgets
   List<String> _tableIds = ['none'];
   bool _read = false;
   bool _firstBuild = true;
@@ -70,32 +69,28 @@ class _FloorPlanState extends State<FloorPlan> {
                   // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
                   Container(
+                    // <Change Floor> GROUP
                     child: Row(
                       children: [
                         const Text("Current floor: "),
                         TextButton(
-                          onPressed: () {
-                            incrementFloor();
-                          },
-                          child: const Text("+",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () => incrementFloor(),
+                          child: const Text("+", style: TextStyle(fontWeight: FontWeight.bold)),
                           style: TextButton.styleFrom(primary: mainColor),
                         ),
                         Text(currentFloor.toString()),
                         TextButton(
-                          onPressed: () {
-                            decrementFloor();
-                          },
-                          child: const Text("-",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () => decrementFloor(),
+                          child: const Text("-", style: TextStyle(fontWeight: FontWeight.bold)),
                           style: TextButton.styleFrom(primary: mainColor),
                         ),
-                    ],
-                  )),
+                      ],
+                    )
+                  ),
+                  // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
                   Container(
-                    // Container is necessary for grouping
-                    // add table group
+                    // <Add Table> GROUP
                     child: Row(
                       children: [
                         Container(
@@ -115,8 +110,7 @@ class _FloorPlanState extends State<FloorPlan> {
                                 _addDropdownValue = newValue!;
                               });
                             },
-                            items: <String>['2', '3', '4', '6', '8']
-                                .map<DropdownMenuItem<String>>((String value) {
+                            items: ['2', '3', '4', '6', '8'].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),
@@ -129,7 +123,7 @@ class _FloorPlanState extends State<FloorPlan> {
                           size: buttonSize,
                           icon: const Icon(Icons.add),
                           color: mainColor,
-                          function: () => {addTable()},
+                          function: () => addTable()
                         ),
                       ],
                     ),
@@ -137,8 +131,8 @@ class _FloorPlanState extends State<FloorPlan> {
                   // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
                   Container(
+                    // <Delete Table> GROUP
                     child: Row(
-                      // delete table group
                       children: [
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -157,8 +151,7 @@ class _FloorPlanState extends State<FloorPlan> {
                                 _removeDropdownValue = newValue!;
                               });
                             },
-                            items: _tableIds
-                                .map<DropdownMenuItem<String>>((String value) {
+                            items: _tableIds.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),

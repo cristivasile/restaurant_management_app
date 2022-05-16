@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 import 'package:restaurant_management_app/bin/constants.dart';
 import 'package:restaurant_management_app/bin/entities/order_list.dart';
 import 'package:restaurant_management_app/bin/entities/product_list.dart';
@@ -7,6 +8,8 @@ import 'package:restaurant_management_app/bin/entities/reservation_list.dart';
 import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
 import 'package:restaurant_management_app/bin/widgets/orders.dart';
 import 'package:restaurant_management_app/bin/widgets/reservations_widget.dart';
+// import 'package:restaurant_management_app/bin/widgets/floorplantest.dart';
+import 'package:restaurant_management_app/bin/widgets/reservations.dart';
 
 import 'bin/data_providers/data_provider.dart';
 import 'bin/widgets/menu.dart';
@@ -20,7 +23,7 @@ Future<void> init() async {
   await ReservationList.loadReservationList();
 }
 
-void main() {
+void main() async {
   init();
   runApp(const MyApp());
 }
@@ -35,33 +38,50 @@ class MyApp extends StatelessWidget {
         length: 5,
         child: Scaffold(
           appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.create_outlined), text: "Edit floor plan"),
+            bottom: TabBar(
+              tabs: <Widget>[
                 Tab(
-                    icon: Icon(Icons.remove_red_eye_outlined),
-                    text: "View tables and reservations"),
-                Tab(
-                  icon: Icon(Icons.menu_book_outlined),
-                  text: "Edit menu",
+                  icon: Icon(Icons.create_outlined), 
+                  text: "Edit floor plan"
                 ),
                 Tab(
                     icon: Icon(Icons.view_list_outlined),
                     text: "View order list"),
                 Tab(
-                    icon: Icon(Icons.view_list_outlined),
-                    text: "View reservation list"),
+                  icon: Icon(Icons.bookmark_added_outlined),
+                  text: "Manage reservations"
+                ),
+                Tab(
+                  icon: Icon(Icons.menu_book_outlined),
+                  text: "Edit menu"
+                ),
+                Tab(
+                  icon: Icon(Icons.view_list_outlined),
+                  text: "View order list"
+                ),
               ],
+              indicatorColor: accent2Color,
+              indicatorWeight: 3,
+              labelColor: accent2Color,
+              unselectedLabelColor: accent1Color,
             ),
-            title: const Text('Floor plan editor'),
-            backgroundColor: mainColor,
+            centerTitle: true,
+            title: const Text(
+              'RESTAURANT MANAGER',
+              style: TextStyle(
+                fontSize: 24,
+                color: accent2Color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            backgroundColor: mainColor
           ),
           body: TabBarView(
             physics: const BouncingScrollPhysics(),
             dragStartBehavior: DragStartBehavior.down,
             children: [
-              Center(child: FloorPlan(key: UniqueKey())),
-              const Center(child: Text("Not implemented")),
+              Center(child: FloorPlan(UniqueKey())),
+              const Center(child: Reservation()),
               const Center(child: Menu()),
               const Center(child: OrdersWidget()),
               const Center(child: ReservationsWidget())
