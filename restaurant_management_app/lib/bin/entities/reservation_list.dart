@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/entities/table_list.dart';
 import 'package:restaurant_management_app/bin/models/table_model.dart';
 

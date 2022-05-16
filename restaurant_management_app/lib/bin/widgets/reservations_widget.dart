@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
 import 'package:restaurant_management_app/bin/entities/reservation_list.dart';
 import 'package:restaurant_management_app/bin/models/reservation_model.dart';
-import 'dart:math';
 
 const double expandedMaxHeight = 400;
 List<ReservationModel> reservations = ReservationList.getReservationList();

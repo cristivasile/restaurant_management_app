@@ -6,7 +6,6 @@ class OrderModel {
   late double price;
   late String tableId;
 
-  
   OrderModel(
       {required this.products,
       required this.quantities,
@@ -31,6 +30,17 @@ class OrderModel {
     for (var quantity in dic['quantities']) {
       quantities.add(quantity);
     }
+  }
+
+  @override
+  String toString() {
+    Iterable<String> productStrings = products.map((element) => element.toString());
+    String rep = "{\n";
+    rep += '"tableId": "$tableId",\n';
+    rep += '"price": $price,\n';
+    rep += '"products": [\n${productStrings.join(',\n')}\n]\n';
+    rep += "}";
+    return rep;
   }
 
   Map<String, dynamic> toJson() {
