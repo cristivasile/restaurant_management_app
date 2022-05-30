@@ -33,12 +33,7 @@ class _FloorPlanState extends State<FloorPlan> {
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  //separate function because it is async and initState can not be async
-  Future<void> init() async {
-    _tableModelList = await TableList.getTableList();
+    _tableModelList = TableList.getTableList();
     setState(() {
       _read = true;
 
@@ -255,7 +250,7 @@ class _FloorPlanState extends State<FloorPlan> {
     TableList.addTable(getTableModelFromWidget(newTableWidget));
   }
 
-  void deleteTable() async {
+  void deleteTable() {
     final String id = _removeDropdownValue;
     if (id != 'none') {
       //check that a table is selected
@@ -275,7 +270,7 @@ class _FloorPlanState extends State<FloorPlan> {
     }
   }
 
-  void incrementFloor() async {
+  void incrementFloor() {
     if (currentFloor < 10) {
       setState(() {
         currentFloor += 1;
@@ -283,7 +278,7 @@ class _FloorPlanState extends State<FloorPlan> {
     }
   }
 
-  void decrementFloor() async {
+  void decrementFloor() {
     if (currentFloor > 0) {
       setState(() {
         currentFloor -= 1;

@@ -40,7 +40,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
   void initState() {
     super.initState();
     _products = ProductList.getProductList();
-    _tables = TableList.getTableListNonAsync();
+    _tables = TableList.getTableList();
     _currentSelectedProduct = _products[0].name;
     _currentSelectedTable = _tables[0].id;
   }

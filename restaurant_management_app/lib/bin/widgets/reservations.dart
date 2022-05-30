@@ -30,12 +30,7 @@ class _ReservationState extends State<Reservation> {
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  //separate function because it is async and initState can not be async
-  Future<void> init() async {
-    _tableModelList = await TableList.getTableList();
+    _tableModelList = TableList.getTableList();
     setState(() {
       _read = true;
 
@@ -158,7 +153,7 @@ class _ReservationState extends State<Reservation> {
     });
   }
 
-  void incrementFloor() async {
+  void incrementFloor() {
     if (currentFloor < 10) {
       setState(() {
         currentFloor += 1;
@@ -166,7 +161,7 @@ class _ReservationState extends State<Reservation> {
     }
   }
 
-  void decrementFloor() async {
+  void decrementFloor() {
     if (currentFloor > 0) {
       setState(() {
         currentFloor -= 1;

@@ -7,7 +7,7 @@ class TableList {
   late List<TableModel> _tables;
   TableList._();
 
-  static Future<List<TableModel>> getTableList() async {
+  static Future<List<TableModel>> loadTableList() async {
     if(object == null){
       object = TableList._();
       object!._tables = await loadTables();
@@ -16,7 +16,9 @@ class TableList {
     return object!._tables;
   }
 
-  static List<TableModel> getTableListNonAsync() {
+  static List<TableModel> getTableList() {
+    object ??= TableList._();
+
     return object!._tables;
   }
 
