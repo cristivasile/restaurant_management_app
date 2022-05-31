@@ -15,8 +15,6 @@ const maxFloors = 10;
 // possible zooms for tables
 List<double> zoomFactors = [0.5, 0.65, 0.75, 1.0, 1.25, 1.5];
 
-
-// returnreturnreturnreturnreturnreturnreturnreturnreturnreturnreturn= //
 const smallTblWidth = 112;
 const largeTblWidth = 168;
 const tblHeight = 112;
