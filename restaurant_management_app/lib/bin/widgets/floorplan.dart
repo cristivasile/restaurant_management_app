@@ -29,9 +29,10 @@ class _FloorPlanState extends State<FloorPlan> {
   String _addDropdownValue = '2';
   String _removeDropdownValue = 'none';
   List<MovableTableWidget> _tableWidgets = [];
-  List<TableModel> _tableModelList = []; //required for the first initialization of _tableWidgets
+  List<TableModel> _tableModelList =
+      []; //required for the first initialization of _tableWidgets
   List<String> _tableIds = ['none'];
-  List<int> _floorCapacities = []; 
+  List<int> _floorCapacities = [];
   bool _read = false;
   bool _firstBuild = true;
   int _currentSeats = 0;
@@ -71,40 +72,48 @@ class _FloorPlanState extends State<FloorPlan> {
                 children: [
                   // Container is necessary for grouping
                   // ignore: avoid_unnecessary_containers
-                  Column( // <Group> +/- controls
+                  Column(
+                    // <Group> +/- controls
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row( // <Group> Floor controls
+                      Row(
+                        // <Group> Floor controls
                         children: [
                           const Text("Current floor: "),
                           TextButton(
                             onPressed: () => decrementFloor(),
-                            child: const Text("-", style: TextStyle(fontWeight: FontWeight.bold)),
+                            child: const Text("-",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             style: TextButton.styleFrom(primary: mainColor),
                           ),
                           Text("$_currentFloor"),
                           TextButton(
                             onPressed: () => incrementFloor(),
-                            child: const Text("+", style: TextStyle(fontWeight: FontWeight.bold)),
+                            child: const Text("+",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
                             style: TextButton.styleFrom(primary: mainColor),
                           ),
                         ],
                       ),
-                      Row( // <Group> Seat capacity controls
-                      children: [
-                        const Text("Floor capacity: "),
-                        TextButton(
-                          onPressed: () => decrementCapacity(),
-                          child: const Text("-", style: TextStyle(fontWeight: FontWeight.bold)),
-                          style: TextButton.styleFrom(primary: mainColor),
-                        ),
-                        Text("$_currentSeats / ${_floorCapacities[_currentFloor] == -1? "∞" : _floorCapacities[_currentFloor]}"),
-                        TextButton(
-                          onPressed: () => incrementCapacity(),
-                          child: const Text("+", style: TextStyle(fontWeight: FontWeight.bold)),
-                          style: TextButton.styleFrom(primary: mainColor),
-                        ),
-                      ],
+                      Row(
+                        // <Group> Seat capacity controls
+                        children: [
+                          const Text("Floor capacity: "),
+                          TextButton(
+                            onPressed: () => decrementCapacity(),
+                            child: const Text("-",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextButton.styleFrom(primary: mainColor),
+                          ),
+                          Text(
+                              "$_currentSeats / ${_floorCapacities[_currentFloor] == -1 ? "∞" : _floorCapacities[_currentFloor]}"),
+                          TextButton(
+                            onPressed: () => incrementCapacity(),
+                            child: const Text("+",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextButton.styleFrom(primary: mainColor),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -131,7 +140,8 @@ class _FloorPlanState extends State<FloorPlan> {
                                 _addDropdownValue = newValue!;
                               });
                             },
-                            items: ['2', '3', '4', '6', '8'].map<DropdownMenuItem<String>>((String value) {
+                            items: ['2', '3', '4', '6', '8']
+                                .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),
@@ -141,11 +151,10 @@ class _FloorPlanState extends State<FloorPlan> {
                         ),
                         //add table button
                         CustomButton(
-                          size: buttonSize,
-                          icon: const Icon(Icons.add),
-                          color: mainColor,
-                          function: () => addTable()
-                        ),
+                            size: buttonSize,
+                            icon: const Icon(Icons.add),
+                            color: mainColor,
+                            function: () => addTable()),
                       ],
                     ),
                   ),
@@ -172,7 +181,8 @@ class _FloorPlanState extends State<FloorPlan> {
                                 _removeDropdownValue = newValue!;
                               });
                             },
-                            items: _tableIds.map<DropdownMenuItem<String>>((String value) {
+                            items: _tableIds
+                                .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(value),
@@ -213,19 +223,22 @@ class _FloorPlanState extends State<FloorPlan> {
                   ),
                   Row(
                     children: [
-                      CustomButton(
-                              size: buttonSize,
-                              icon: const Icon(Icons.zoom_out),
-                              color: mainColor,
-                              function: () => {zoomOut()},
-                      ),
-                      const Text(" "),
-                      CustomButton(
-                              size: buttonSize,
-                              icon: const Icon(Icons.zoom_in),
-                              color: mainColor,
-                              function: () => {zoomIn()},
-                      ),
+                      Container(
+                          child: CustomButton(
+                            size: buttonSize,
+                            icon: const Icon(Icons.zoom_in),
+                            color: mainColor,
+                            function: () => {zoomIn()},
+                          ),
+                          margin: const EdgeInsets.symmetric(horizontal: 10.0)),
+                      Container(
+                          child: CustomButton(
+                            size: buttonSize,
+                            icon: const Icon(Icons.zoom_out),
+                            color: mainColor,
+                            function: () => {zoomOut()},
+                          ),
+                          margin: const EdgeInsets.symmetric(horizontal: 10.0))
                     ],
                   ),
                 ],
@@ -265,11 +278,11 @@ class _FloorPlanState extends State<FloorPlan> {
     });
   }
 
-  Future<void> addTable() async{
+  Future<void> addTable() async {
     UniqueKey key = UniqueKey();
     int tableSize = int.parse(_addDropdownValue);
     int capacity = _floorCapacities[_currentFloor];
-    if(capacity == -1 || tableSize + _currentSeats <= capacity){
+    if (capacity == -1 || tableSize + _currentSeats <= capacity) {
       MovableTableWidget newTableWidget = MovableTableWidget(
         key:
             key, //tables must have a key, otherwise states can jump over to another object
@@ -278,7 +291,8 @@ class _FloorPlanState extends State<FloorPlan> {
         position: Offset.zero,
         floor: _currentFloor,
         id: generateTableId(
-            tableSize: int.parse(_addDropdownValue), tableWidgets: _tableWidgets),
+            tableSize: int.parse(_addDropdownValue),
+            tableWidgets: _tableWidgets),
       );
 
       setState(() {
@@ -294,24 +308,25 @@ class _FloorPlanState extends State<FloorPlan> {
       });
 
       TableList.addTable(getTableModelFromWidget(newTableWidget));
-    }
-    else{
+    } else {
       await showDialog(
-        context: context,  
-        builder: (BuildContext context) {  
-         return AlertDialog(  
-            title: const Text("Operation failed"),  
-            content: const Text("Cannot add a new table because the seat limit would be exceeded!"),  
-            actions: [  
-              TextButton(  
-              child: const Text("OK",style: TextStyle(color: Colors.redAccent)),  
-              onPressed: () {  
-              Navigator.of(context).pop();  
-              },  
-            ),   
-            ],  
-          );    
-        },  
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Operation failed"),
+            content: const Text(
+                "Cannot add a new table because the seat limit would be exceeded!"),
+            actions: [
+              TextButton(
+                child:
+                    const Text("OK", style: TextStyle(color: Colors.redAccent)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
       );
     }
   }
@@ -352,56 +367,57 @@ class _FloorPlanState extends State<FloorPlan> {
     }
   }
 
-  void incrementCapacity(){
-      setState(() {
-        if(_floorCapacities[_currentFloor] == -1) {
-          _floorCapacities[_currentFloor] = _currentSeats;
-        }
-        else{
-          _floorCapacities[_currentFloor] += 1;
-        }
-      });
+  void incrementCapacity() {
+    setState(() {
+      if (_floorCapacities[_currentFloor] == -1) {
+        _floorCapacities[_currentFloor] = _currentSeats;
+      } else {
+        _floorCapacities[_currentFloor] += 1;
+      }
+    });
   }
 
-  void decrementCapacity(){
-      setState(() {
-        if(_floorCapacities[_currentFloor] == _currentSeats) {
-          _floorCapacities[_currentFloor] = -1;
-        }
-        else if(_floorCapacities[_currentFloor] != -1) {
-          _floorCapacities[_currentFloor] -= 1;
-        }
-      });
+  void decrementCapacity() {
+    setState(() {
+      if (_floorCapacities[_currentFloor] == _currentSeats) {
+        _floorCapacities[_currentFloor] = -1;
+      } else if (_floorCapacities[_currentFloor] != -1) {
+        _floorCapacities[_currentFloor] -= 1;
+      }
+    });
   }
 
-  void save(){
+  void save() {
     saveTables();
     CapacityList.setCapacities(_floorCapacities); // set capacity list and save
     saveCapacities();
   }
 
-  int getCurrentSeatNumber(){
+  int getCurrentSeatNumber() {
     int result = 0;
 
-    for(var table in _tableModelList.where((element) => element.floor == _currentFloor)) {
+    for (var table
+        in _tableModelList.where((element) => element.floor == _currentFloor)) {
       result += table.tableSize;
     }
 
     return result;
   }
 
-  void zoomIn(){
+  void zoomIn() {
     int index = getZoomIndex();
-    Globals.getGlobals().tableImagesScale = zoomFactors[index == 0 ? 0 : index - 1];
+    Globals.getGlobals().tableImagesScale =
+        zoomFactors[index == zoomFactors.length - 1 ? zoomFactors.length - 1 : index + 1];
     setState(() {
       _firstBuild = true; //rebuild children widgets
     });
     saveGlobalObject();
   }
 
-  void zoomOut(){
+  void zoomOut() {
     int index = getZoomIndex();
-    Globals.getGlobals().tableImagesScale = zoomFactors[index == zoomFactors.length - 1 ? zoomFactors.length - 1 : index + 1];
+    Globals.getGlobals().tableImagesScale = 
+        zoomFactors[index == 0 ? 0 : index - 1];
     setState(() {
       _firstBuild = true; //rebuild children widgets
     });
