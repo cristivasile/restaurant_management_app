@@ -18,6 +18,8 @@ abstract class DataProvider {
   Future<void> writeOrders(List<OrderModel> orderList);
   Future<List<ReservationModel>> readReservations();
   Future<void> writeReservations(List<ReservationModel> productList);
+  Future<List<int>> readCapacities();
+  Future<void> writeCapacities(List<int> capacities);
 }
 
 // reads and writes to a JSON file
@@ -27,11 +29,13 @@ class JsonProvider implements DataProvider {
   static const productFile = "products.json";
   static const orderFile = "orders.json";
   static const reservationFile = "reservations.json";
+  static const capacitiesFile = "capacities.json";
 
   static const tablePath = jsonPath + tableFile;
   static const productPath = jsonPath + productFile;
   static const orderPath = jsonPath + orderFile;
   static const reservationPath = jsonPath + reservationFile;
+  static const capacitiesPath = jsonPath + capacitiesFile;
 
   JsonProvider();
 
@@ -83,5 +87,17 @@ class JsonProvider implements DataProvider {
   @override
   Future<void> writeReservations(List<ReservationModel> reservationList) async {
     await File(reservationPath).writeAsString(json.encode(reservationList));
+  }
+
+  @override
+  Future<List<int>> readCapacities() async{
+    final jsondata = await services.rootBundle.loadString(capacitiesPath);
+    final data = json.decode(jsondata) as List<dynamic>;
+    return data.cast<int>();
+  }
+
+  @override
+  Future<void> writeCapacities(List<int> capacities) async{
+    await File(capacitiesPath).writeAsString(json.encode(capacities));
   }
 }
