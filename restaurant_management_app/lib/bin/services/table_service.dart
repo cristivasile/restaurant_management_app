@@ -56,8 +56,8 @@ Future<List<TableModel>> loadTables() async {
 
 ///Saves tables to disk
 ///
-Future<void> saveTables() async {
-  List<TableModel> toSave = await TableList.getTableList();
+void saveTables() {
+  List<TableModel> toSave = TableList.getTableList();
   data.writeTables(toSave); // use global data service to store tables
 }
 

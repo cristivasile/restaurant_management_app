@@ -13,6 +13,7 @@ import 'package:restaurant_management_app/bin/widgets/reservations_widget.dart';
 import 'package:restaurant_management_app/bin/widgets/reservations.dart';
 
 import 'bin/data_providers/data_provider.dart';
+import 'bin/entities/globals.dart';
 import 'bin/entities/table_list.dart';
 import 'bin/widgets/menu.dart';
 
@@ -20,6 +21,7 @@ DataProvider data = JsonProvider();
 
 Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Globals.loadGlobals();
   await TableList.loadTableList();
   await CapacityList.loadCapacityList();
   await ProductList.loadProductList();

@@ -1,12 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'package:restaurant_management_app/bin/entities/globals.dart';
 import 'package:restaurant_management_app/bin/entities/table_list.dart';
 import 'package:restaurant_management_app/bin/models/table_model.dart';
 import 'package:restaurant_management_app/bin/services/capacity_service.dart';
+import 'package:restaurant_management_app/bin/services/globals_service.dart';
 import 'package:restaurant_management_app/bin/services/table_service.dart';
-import 'package:restaurant_management_app/bin/widgets/floorplantest.dart';
 import 'package:restaurant_management_app/bin/widgets/table_widget.dart';
 
 import '../entities/capacity_list.dart';
@@ -79,14 +78,14 @@ class _FloorPlanState extends State<FloorPlan> {
                         children: [
                           const Text("Current floor: "),
                           TextButton(
-                            onPressed: () => incrementFloor(),
-                            child: const Text("+", style: TextStyle(fontWeight: FontWeight.bold)),
+                            onPressed: () => decrementFloor(),
+                            child: const Text("-", style: TextStyle(fontWeight: FontWeight.bold)),
                             style: TextButton.styleFrom(primary: mainColor),
                           ),
                           Text("$_currentFloor"),
                           TextButton(
-                            onPressed: () => decrementFloor(),
-                            child: const Text("-", style: TextStyle(fontWeight: FontWeight.bold)),
+                            onPressed: () => incrementFloor(),
+                            child: const Text("+", style: TextStyle(fontWeight: FontWeight.bold)),
                             style: TextButton.styleFrom(primary: mainColor),
                           ),
                         ],
@@ -95,18 +94,18 @@ class _FloorPlanState extends State<FloorPlan> {
                       children: [
                         const Text("Floor capacity: "),
                         TextButton(
-                          onPressed: () => incrementCapacity(),
-                          child: const Text("+", style: TextStyle(fontWeight: FontWeight.bold)),
-                          style: TextButton.styleFrom(primary: mainColor),
-                        ),
-                        Text("$_currentSeats / ${_floorCapacities[_currentFloor] == -1? "∞" : _floorCapacities[_currentFloor]}"),
-                        TextButton(
                           onPressed: () => decrementCapacity(),
                           child: const Text("-", style: TextStyle(fontWeight: FontWeight.bold)),
                           style: TextButton.styleFrom(primary: mainColor),
                         ),
+                        Text("$_currentSeats / ${_floorCapacities[_currentFloor] == -1? "∞" : _floorCapacities[_currentFloor]}"),
+                        TextButton(
+                          onPressed: () => incrementCapacity(),
+                          child: const Text("+", style: TextStyle(fontWeight: FontWeight.bold)),
+                          style: TextButton.styleFrom(primary: mainColor),
+                        ),
                       ],
-                    )
+                      ),
                     ],
                   ),
                   // Container is necessary for grouping
@@ -211,6 +210,23 @@ class _FloorPlanState extends State<FloorPlan> {
                         ),
                       ],
                     ),
+                  ),
+                  Row(
+                    children: [
+                      CustomButton(
+                              size: buttonSize,
+                              icon: const Icon(Icons.zoom_out),
+                              color: mainColor,
+                              function: () => {zoomOut()},
+                      ),
+                      const Text(" "),
+                      CustomButton(
+                              size: buttonSize,
+                              icon: const Icon(Icons.zoom_in),
+                              color: mainColor,
+                              function: () => {zoomIn()},
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -372,5 +388,23 @@ class _FloorPlanState extends State<FloorPlan> {
     }
 
     return result;
+  }
+
+  void zoomIn(){
+    int index = getZoomIndex();
+    Globals.getGlobals().tableImagesScale = zoomFactors[index == 0 ? 0 : index - 1];
+    setState(() {
+      _firstBuild = true; //rebuild children widgets
+    });
+    saveGlobalObject();
+  }
+
+  void zoomOut(){
+    int index = getZoomIndex();
+    Globals.getGlobals().tableImagesScale = zoomFactors[index == zoomFactors.length - 1 ? zoomFactors.length - 1 : index + 1];
+    setState(() {
+      _firstBuild = true; //rebuild children widgets
+    });
+    saveGlobalObject();
   }
 }

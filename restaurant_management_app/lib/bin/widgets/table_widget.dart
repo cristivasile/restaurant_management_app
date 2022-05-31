@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart' as constants;
 
+import '../entities/globals.dart';
 import '../entities/table_list.dart';
 
 /// Movable table object
@@ -34,6 +35,7 @@ class MovableTableWidget extends StatefulWidget {
 
 class _MovableTableWidgetState extends State<MovableTableWidget> {
   late Offset _position;
+  late double _scale;
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
 
   @override
   Widget build(BuildContext context) {
+    _scale = Globals.getGlobals().tableImagesScale;
     return Positioned(
       left: _position.dx,
       top: _position.dy,
@@ -50,22 +53,22 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
         // image displayed under the mouse while dragging
         feedback: Image(
             image: AssetImage(widget.imagePath + ".png"),
-            width: widget.imageWidth.toDouble(),
-            height: widget.imageHeight.toDouble()),
+            width: widget.imageWidth.toDouble() * _scale,
+            height: widget.imageHeight.toDouble()* _scale),
         // image displayed normally
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
             Image(
               image: AssetImage(widget.imagePath + ".png"),
-              width: widget.imageWidth.toDouble(),
-              height: widget.imageHeight.toDouble(),
+              width: widget.imageWidth.toDouble() * _scale,
+              height: widget.imageHeight.toDouble() * _scale,
             ),
             Text(
               widget.id,
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 18 * _scale,
                   fontWeight: FontWeight.bold),
             ),
           ],
@@ -74,8 +77,8 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
         childWhenDragging: Image(
             image:
                 AssetImage(widget.imagePath + "_feedback" + ".png"),
-            width: widget.imageWidth.toDouble(),
-            height: widget.imageHeight.toDouble()),
+            width: widget.imageWidth.toDouble() * _scale,
+            height: widget.imageHeight.toDouble() * _scale),
         onDragEnd: (DraggableDetails details) {
           setState(() {
             final adjustmenty = MediaQuery.of(context).size.height -

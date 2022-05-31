@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_management_app/bin/constants.dart' as constants;
 
 import '../constants.dart';
+import '../entities/globals.dart';
 
 /// Movable table object
 ///
@@ -35,6 +36,7 @@ class UnmovableTableWidget extends StatefulWidget {
 class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
   static String selectedId = "";
   late Offset _position;
+  late double _scale;
 
   @override
   void initState() {
@@ -44,12 +46,13 @@ class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
 
   @override
   Widget build(BuildContext context) {
+    _scale = Globals.getGlobals().tableImagesScale;
     return Positioned(
       left: _position.dx,
       top: _position.dy,
       child: SizedBox(
-        width: widget._imageWidth.toDouble(),
-        height: widget.imageHeight.toDouble(),
+        width: widget._imageWidth.toDouble() * _scale,
+        height: widget.imageHeight.toDouble() * _scale,
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -58,14 +61,14 @@ class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
                   ? AssetImage(
                       widget.imagePath + '_selected_highlighted' + ".png")
                   : AssetImage(widget.imagePath + ".png"),
-              width: widget._imageWidth.toDouble(),
-              height: widget.imageHeight.toDouble(),
+              width: widget._imageWidth.toDouble() * _scale,
+              height: widget.imageHeight.toDouble() * _scale,
             ),
             Text(
               widget.id,
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 18 * _scale,
                   fontWeight: FontWeight.bold),
             ),
             GestureDetector(onTap: () {

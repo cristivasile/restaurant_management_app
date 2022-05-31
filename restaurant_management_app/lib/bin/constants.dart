@@ -12,12 +12,14 @@ const feedbackPath = "Feedback";
 // max number of floors for floorplan
 const maxFloors = 10;
 
-// --------------------------------
+// possible zooms for tables
+List<double> zoomFactors = [0.5, 0.65, 0.75, 1.0, 1.25, 1.5];
+
 
 // returnreturnreturnreturnreturnreturnreturnreturnreturnreturnreturn= //
-const smallTblWidth = 140;
-const largeTblWidth = 210;
-const tblHeight = 140;
+const smallTblWidth = 112;
+const largeTblWidth = 168;
+const tblHeight = 112;
 
 enum AssetPaths {
   small2,
