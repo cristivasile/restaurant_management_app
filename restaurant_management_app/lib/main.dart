@@ -26,7 +26,7 @@ Future<void> init() async {
 }
 
 void main() async {
-  init();
+  await init();
   runApp(const MyApp());
 }
 
