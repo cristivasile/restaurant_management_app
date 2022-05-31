@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:restaurant_management_app/bin/constants.dart';
+import 'package:restaurant_management_app/bin/entities/capacity_list.dart';
 import 'package:restaurant_management_app/bin/entities/order_list.dart';
 import 'package:restaurant_management_app/bin/entities/product_list.dart';
 import 'package:restaurant_management_app/bin/entities/reservation_list.dart';
@@ -20,13 +21,14 @@ DataProvider data = JsonProvider();
 Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
   await TableList.loadTableList();
+  await CapacityList.loadCapacityList();
   await ProductList.loadProductList();
   await OrderList.loadOrderList();
   await ReservationList.loadReservationList();
 }
 
 void main() async {
-  init();
+  await init();
   runApp(const MyApp());
 }
 

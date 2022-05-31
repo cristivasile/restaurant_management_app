@@ -9,9 +9,9 @@ const eightTablePath = "assets/8Table";
 const feedbackPath = "Feedback";
 // --------------------------------
 
-// widths of the table images. Heights are equal to 92 for all images so smallTableWidth can be used
-const smallTableWidth = 92;
-const largeTableWidth = 140;
+// max number of floors for floorplan
+const maxFloors = 10;
+
 // --------------------------------
 
 // returnreturnreturnreturnreturnreturnreturnreturnreturnreturnreturn= //
