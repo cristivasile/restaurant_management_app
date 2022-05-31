@@ -1,105 +1,105 @@
 [{
 "id": "A1",
-"xOffset": 1299.399999999989,
-"yOffset": 126.20000000000624,
+"xOffset": 1290.0,
+"yOffset": 150.0,
 "tableSize": 2,
 "floor": 0
 },
 {
 "id": "A2",
-"xOffset": 1299.7999999999843,
-"yOffset": 23.599999999999056,
+"xOffset": 1290.0,
+"yOffset": 30.0,
 "tableSize": 2,
 "floor": 0
 },
 {
 "id": "D1",
-"xOffset": 25.800000000001205,
-"yOffset": 32.5999999999965,
+"xOffset": 30.0,
+"yOffset": 30.0,
 "tableSize": 6,
 "floor": 0
 },
 {
 "id": "D2",
-"xOffset": 24.100000000007654,
-"yOffset": 207.70000000000158,
+"xOffset": 30.0,
+"yOffset": 210.0,
 "tableSize": 6,
 "floor": 0
 },
 {
 "id": "D3",
-"xOffset": 25.600000000001245,
-"yOffset": 394.60000000000525,
+"xOffset": 30.0,
+"yOffset": 390.0,
 "tableSize": 6,
 "floor": 0
 },
 {
 "id": "A3",
-"xOffset": 1127.0000000000018,
-"yOffset": 126.60000000000457,
+"xOffset": 1110.0,
+"yOffset": 150.0,
 "tableSize": 2,
 "floor": 0
 },
 {
 "id": "A4",
-"xOffset": 1127.000000000007,
-"yOffset": 23.399999999998073,
+"xOffset": 1110.0,
+"yOffset": 30.0,
 "tableSize": 2,
 "floor": 0
 },
 {
 "id": "E1",
-"xOffset": 460.0000000000057,
-"yOffset": 307.200000000008,
+"xOffset": 420.0,
+"yOffset": 330.0,
 "tableSize": 8,
 "floor": 0
 },
 {
 "id": "B1",
-"xOffset": 1303.1999999999946,
-"yOffset": 376.8000000000046,
+"xOffset": 1290.0,
+"yOffset": 390.0,
 "tableSize": 3,
 "floor": 0
 },
 {
 "id": "B2",
-"xOffset": 1130.399999999992,
-"yOffset": 376.80000000000007,
+"xOffset": 1110.0,
+"yOffset": 390.0,
 "tableSize": 3,
 "floor": 0
 },
 {
 "id": "C1",
-"xOffset": 835.2000000000037,
-"yOffset": 379.1999999999965,
+"xOffset": 780.0,
+"yOffset": 390.0,
 "tableSize": 4,
 "floor": 0
 },
 {
 "id": "C2",
-"xOffset": 834.3999999999979,
-"yOffset": 46.40000000000026,
+"xOffset": 780.0,
+"yOffset": 30.0,
 "tableSize": 4,
 "floor": 0
 },
 {
 "id": "C3",
-"xOffset": 835.1999999999999,
-"yOffset": 213.60000000000247,
+"xOffset": 780.0,
+"yOffset": 210.0,
 "tableSize": 4,
 "floor": 0
 },
 {
 "id": "E2",
-"xOffset": 458.4000000000001,
-"yOffset": 118.40000000000111,
+"xOffset": 420.0,
+"yOffset": 90.0,
 "tableSize": 8,
 "floor": 0
 },
 {
 "id": "B3",
-"xOffset": 1215.9999999999943,
-"yOffset": 253.6000000000024,
+"xOffset": 1200.0,
+"yOffset": 270.0,
 "tableSize": 3,
 "floor": 0
 }]

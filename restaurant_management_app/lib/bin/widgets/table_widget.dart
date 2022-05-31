@@ -36,6 +36,7 @@ class MovableTableWidget extends StatefulWidget {
 class _MovableTableWidgetState extends State<MovableTableWidget> {
   late Offset _position;
   late double _scale;
+  late int _gridStep;
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
   @override
   Widget build(BuildContext context) {
     _scale = Globals.getGlobals().tableImagesScale;
+    _gridStep = Globals.getGlobals().floorGridStep;
     return Positioned(
       left: _position.dx,
       top: _position.dy,
@@ -98,8 +100,12 @@ class _MovableTableWidgetState extends State<MovableTableWidget> {
                 details.offset.dy > 0 + adjustmenty &&
                 details.offset.dy + widget.imageHeight + constants.floorMargin <
                     MediaQuery.of(context).size.height) {
-              double xOffset = details.offset.dx - adjustmentx;
-              double yOffset = details.offset.dy - adjustmenty;
+              double xOffset = (details.offset.dx - adjustmentx).toInt() % _gridStep < _gridStep / 2 ?
+                ((details.offset.dx - adjustmentx) / _gridStep).truncateToDouble() * _gridStep :
+                (((details.offset.dx - adjustmentx) / _gridStep).truncateToDouble() + 1) * _gridStep;
+              double yOffset = (details.offset.dy - adjustmenty).toInt() % _gridStep < 15 / 2 ?
+                ((details.offset.dy - adjustmenty) / _gridStep).truncateToDouble() * _gridStep :
+                (((details.offset.dy - adjustmenty) / _gridStep).truncateToDouble() + 1) * _gridStep;
 
               _position = Offset(xOffset, yOffset);
 
