@@ -9,7 +9,6 @@ import 'package:restaurant_management_app/bin/entities/reservation_list.dart';
 import 'package:restaurant_management_app/bin/widgets/floorplan.dart';
 import 'package:restaurant_management_app/bin/widgets/orders.dart';
 import 'package:restaurant_management_app/bin/widgets/reservations_widget.dart';
-// import 'package:restaurant_management_app/bin/widgets/floorplantest.dart';
 import 'package:restaurant_management_app/bin/widgets/reservations.dart';
 
 import 'bin/data_providers/data_provider.dart';
