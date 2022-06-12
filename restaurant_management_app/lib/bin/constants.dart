@@ -113,7 +113,6 @@ extension AssetPathsExtension on AssetPaths {
 }
 
 const double floorMargin = 10;
-
 //const smallModifier = 0.5;
 //const largeModifier = 1.5;
 
@@ -139,4 +138,9 @@ Map sectionIcons = {
   'Soft drinks': Icons.local_drink,
   'Spirits': Icons.wine_bar
 };
+
+//reservation Section
+
+const int availableHours = 3;
+
 //---------------------------------
