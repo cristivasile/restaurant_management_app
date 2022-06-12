@@ -1,3 +1,4 @@
+import 'package:restaurant_management_app/bin/constants.dart';
 import 'package:restaurant_management_app/bin/entities/table_list.dart';
 import 'package:restaurant_management_app/bin/models/table_model.dart';
 
@@ -65,16 +66,22 @@ class ReservationList {
 
   static Future<bool> checkValidReservation(
       ReservationModel reservation) async {
-    List<String> freeTableIds = await getFreeTableIds();
-
-    if (!freeTableIds.contains(reservation.tableId)) {
-      return false;
-    }
-
+    DateTime myDt = reservation.dateTime;
     //aici teoretic trebuie sa verific pentru disponibilitatea mesei dupa data si ora
-    DateTime dt = reservation.dateTime;
     for (ReservationModel res in object!._Reservations) {
-      DateTime resDT = res.dateTime;
+      if (res.tableId == reservation.tableId) {
+        DateTime startDateTime = res.dateTime;
+        DateTime endDateTime =
+            startDateTime.add(const Duration(hours: availableHours));
+
+        if (myDt.isAfter(startDateTime) && myDt.isBefore(endDateTime)) {
+          return false;
+        }
+
+        if (myDt.compareTo(startDateTime) == 0) {
+          return false;
+        }
+      }
     }
     return true;
   }
@@ -84,14 +91,16 @@ class ReservationList {
     object!._Reservations = newTables;
   }
 
-  static void addReservation(ReservationModel Reservation) async {
-    bool validReservation = await checkValidReservation(Reservation);
+  static Future<bool> addReservation(ReservationModel Reservation) async {
+    bool validReservation = true;
+    validReservation = await checkValidReservation(Reservation);
+
     if (validReservation) {
       object ??= ReservationList._();
       object!._Reservations.add(Reservation);
-    } else {
-      //invalid reservation
+      return true;
     }
+    return false;
   }
 
   ///Removes a Reservation with a given name

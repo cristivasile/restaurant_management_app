@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^1.16.0
   firebase_database: ^9.0.13
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -62,7 +63,6 @@ flutter:
     - assets/temp_json/
     - assets/tables/small/
     - assets/tables/large/
-    - assets/misc/
     
   # To add assets to your application, add an assets section, like this:
   # assets:
