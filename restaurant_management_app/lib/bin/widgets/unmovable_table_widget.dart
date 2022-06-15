@@ -82,7 +82,7 @@ class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
                       builder: (BuildContext context) {
                         return StatefulBuilder(builder: (context, setState) {
                           return AlertDialog(
-                              title: const Text("Add new item",
+                              title: const Text("Add new reservation",
                                   style: TextStyle(color: mainColor)),
                               content: SizedBox(
                                   height: 200,
@@ -92,10 +92,11 @@ class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
                                       children: const [
                                         TextField(
                                             decoration: InputDecoration(
-                                                hintText: "Enter table ID")),
+                                                hintText: "Enter order ID")),
                                         TextField(
                                             decoration: InputDecoration(
-                                                hintText: "Enter order ID"))
+                                                hintText:
+                                                    "Enter reservation ID"))
                                       ])),
                               actions: [
                                 TextButton(
@@ -131,7 +132,7 @@ class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
                                       children: const [
                                         TextField(
                                             decoration: InputDecoration(
-                                                hintText: "Enter table ID")),
+                                                hintText: "Enter name")),
                                         TextField(
                                             decoration: InputDecoration(
                                                 hintText: "Enter order ID"))
