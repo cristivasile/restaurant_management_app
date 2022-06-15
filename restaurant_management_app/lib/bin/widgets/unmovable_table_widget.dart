@@ -92,11 +92,11 @@ class _UnmovableTableWidgetState extends State<UnmovableTableWidget> {
                                       children: const [
                                         TextField(
                                             decoration: InputDecoration(
-                                                hintText: "Enter order ID")),
+                                                hintText: "Enter name")),
                                         TextField(
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    "Enter reservation ID"))
+                                                    "Enter order ID"))
                                       ])),
                               actions: [
                                 TextButton(
