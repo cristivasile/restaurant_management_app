@@ -108,19 +108,5 @@
             2,
             5
         ]
-    },
-    {
-        "tableId": "E2",
-        "price": 1170.75,
-        "products": [
-            {
-                "name": "Babaroles",
-                "price": 234.15,
-                "category": "Main courses"
-            }
-        ],
-        "quantities": [
-            5
-        ]
     }
 ]
